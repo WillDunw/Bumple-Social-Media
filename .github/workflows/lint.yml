@@ -21,7 +21,7 @@ jobs:
 
     - name: Run lint and ktlint
       run: |
-        ./gradlew lint ktlintCheck
+        ./gradlew lint ktlint
 
     - name: Upload lint and ktlint results
       uses: actions/upload-artifact@v2
