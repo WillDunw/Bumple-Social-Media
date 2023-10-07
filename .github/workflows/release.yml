@@ -1,12 +1,10 @@
 name: Build Android Project
 
 on:
-  push:
+  pull_request_review:
+    types: [approved]
     branches:
-      - main  # Adjust to your main branch name
-  pull_request:
-    branches:
-      - main  # Adjust to your main branch name
+      - main
 
 jobs:
   build:
@@ -35,7 +33,7 @@ jobs:
     - name: Build Android Project
       run: |
         chmod +x gradlew
-        ./gradlew assembleDebug  # Change this to your desired build task
+        ./gradlew assembleDebug 
 
     - name: Upload APKs
       uses: actions/upload-artifact@v2
