@@ -25,15 +25,12 @@ jobs:
         chmod +x ktlint
         sudo mv ktlint /usr/local/bin/
 
-    - name: Run ktlint format
-      run: ktlintFormat
-
-    - name: Run ktlint format check
-      run: ktlintCheck
+    - name: Run ktlint 
+      run: ktlint
 
     - name: Run lint
       run: |
-        ./gradlew tlint
+        ./gradlew lint
 
     - name: Upload lint and ktlint results
       uses: actions/upload-artifact@v2
