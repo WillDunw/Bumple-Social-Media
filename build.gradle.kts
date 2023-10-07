@@ -8,3 +8,4 @@ plugins {
 repositories {
   // Required to download KtLint
   mavenCentral()
+}
