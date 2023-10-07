@@ -1,7 +1,4 @@
 pluginManagement {
-plugins {
-  id("org.jlleitschuh.gradle.ktlint") version "<current_version>"
-}
     repositories {
         google()
         mavenCentral()
