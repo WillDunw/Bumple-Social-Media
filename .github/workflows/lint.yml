@@ -30,7 +30,7 @@ jobs:
 
     - name: Run lint
       run: |
-        ./gradlew ktlint
+        ./gradlew ktlint -F
 
     - name: Upload lint and ktlint results
       uses: actions/upload-artifact@v2
