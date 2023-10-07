@@ -26,7 +26,7 @@ jobs:
         sudo mv ktlint /usr/local/bin/
 
     - name: Run ktlint
-      run: ktlint --color --relative --verbose --reporter=plain
+      run: ktlint
 
     - name: Run lint
       run: |
