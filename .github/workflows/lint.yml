@@ -17,11 +17,20 @@ jobs:
       uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
-        java-version: '11'
+        java-version: '18'
 
-    - name: Run lint and ktlint
+    - name: Install ktlint
       run: |
-        ./gradlew lint ktlint
+        curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.42.1/ktlint
+        chmod +x ktlint
+        sudo mv ktlint /usr/local/bin/
+
+    - name: Run ktlint 
+      run: ktlint
+
+    - name: Run lint
+      run: |
+        ./gradlew lint 
 
     - name: Upload lint and ktlint results
       uses: actions/upload-artifact@v2
