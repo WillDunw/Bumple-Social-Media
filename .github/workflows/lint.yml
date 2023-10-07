@@ -1,26 +1,42 @@
-# Step 1: Choose the branch or branches you want to run this workflow
+name: Android Lint and ktlint
+
 on:
   pull_request:
     branches:
-      - main
-      
-jobs:
-  testing:
-    name: Lint Check and Testing
+      - main  # Adjust to your main branch name
 
+jobs:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Clone Repo
-      uses: actions/checkout@v1
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+    - name: Set up JDK
+      uses: actions/setup-java@v2
       with:
-        java-version: 1.8
+        distribution: 'adopt'
+        java-version: '11'
 
-    - name: Run Kotlin Linter
-      run: ./gradlew ktlintStagingDebugCheck
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
-    - name: Run Android Linter
-      run: ./gradlew lintStagingDebug
+    - name: Run lint and ktlint
+      run: |
+        ./gradlew lint ktlint
+
+    - name: Upload lint and ktlint results
+      uses: actions/upload-artifact@v2
+      with:
+        name: lint-ktlint-results
+        path: |
+          app/build/reports/
+          app/build/outputs/lint-results.xml
