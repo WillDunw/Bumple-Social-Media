@@ -1,1 +1,14 @@
+name: Gradle-Build 
 
+on: 
+  pull_request_review:
+    types: [approved]
+    branches:
+      -main
+
+jobs: 
+  approved:
+
+    runs-on: ubuntu-latest
+    
+  
