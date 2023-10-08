@@ -15,7 +15,7 @@
   8. Once you're logged in / signed up the following feature will be available to you. 
 
 ## Screenshots of application
-![Book logo](/least-github-pages/image.png)
+![Main Screen](/AppDev3-Project-5A6/image.png)
 
 
 ## Team members
