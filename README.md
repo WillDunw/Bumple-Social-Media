@@ -15,7 +15,10 @@
   8. Once you're logged in / signed up the following feature will be available to you. 
 
 ## Screenshots of application
-![Main Screen](/AppDev3-Project-5A6/image.png)
+![Create a post](/image.png)
+![News Feed](/image1.png)
+![User Post](/image2.png)
+
 
 
 ## Team members
