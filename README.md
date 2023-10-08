@@ -15,7 +15,8 @@
   8. Once you're logged in / signed up the following feature will be available to you. 
 
 ## Screenshots of application
-- (by Sprint 1): Screenshots from each of the main screens of your application.
+![Book logo](/least-github-pages/image.png)
+
 
 ## Team members
 - William Cattrell : williamdunwoody1@gmail.com
