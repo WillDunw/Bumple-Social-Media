@@ -22,6 +22,6 @@
 
 
 ## Team members
-- William Cattrell : williamdunwoody1@gmail.com
+- William Dunwoody : williamdunwoody1@gmail.com
 - Ryan Meziane: ryanmezianable@gmail.com
 - Brandon Khublall: Brandon.khublall12@gmail.com 
