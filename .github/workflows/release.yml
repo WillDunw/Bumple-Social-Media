@@ -1,8 +1,9 @@
 name: Build Android Project
 
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    types:
+      - opened
     branches:
       - main
 
