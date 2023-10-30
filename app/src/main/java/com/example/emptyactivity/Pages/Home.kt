@@ -6,6 +6,7 @@ import com.example.emptyactivity.Layout.MainLayout
 
 @Composable
 fun Home(){
+
     MainLayout {
         Text("in home")
     }

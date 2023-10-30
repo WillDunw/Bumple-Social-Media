@@ -23,7 +23,6 @@ import com.example.emptyactivity.navigation.Router
 import com.example.emptyactivity.ui.theme.EmptyActivityTheme
 
 val postListProvider = compositionLocalOf<SnapshotStateList<Post>> {error("Error with post provider.")  }
-val userProvider = compositionLocalOf<User?> {error("Error with user provider.")}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +34,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     val postList = rememberMutableStateListOf<Post>()
-                    val user by rememberSaveable { mutableStateOf(null)}
 
                     CompositionLocalProvider(postListProvider provides postList) {
-                        CompositionLocalProvider(userProvider provides user) {
                             Router()
-                        }
                     }
                 }
             }
