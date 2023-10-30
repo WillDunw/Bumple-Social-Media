@@ -9,17 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import com.example.emptyactivity.DataModels.Post
+import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.Pages.SignIn
 import com.example.emptyactivity.navigation.Router
 import com.example.emptyactivity.ui.theme.EmptyActivityTheme
 
 val postListProvider = compositionLocalOf<SnapshotStateList<Post>> {error("Error with post provider.")  }
+val userProvider = compositionLocalOf<User?> {error("Error with user provider.")}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +35,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     val postList = rememberMutableStateListOf<Post>()
+                    val user by rememberSaveable { mutableStateOf(null)}
 
                     CompositionLocalProvider(postListProvider provides postList) {
-                        Router()
+                        CompositionLocalProvider(userProvider provides user) {
+                            Router()
+                        }
                     }
                 }
             }
