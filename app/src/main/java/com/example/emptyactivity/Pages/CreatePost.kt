@@ -138,7 +138,8 @@ fun CreatePost(modifier: Modifier = Modifier){
                         Button(onClick = {
                             postList.add(
                                 Post(
-                                    "${postList.size}",
+                                    "${postList.size}"
+                                    , " ", // Need to fix this
                                     LocalDateTime.now(),
                                     title,
                                     content,
