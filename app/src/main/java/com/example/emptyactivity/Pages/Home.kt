@@ -29,11 +29,11 @@ fun Home(){
 
     // Seed posts
     val posts = listOf(
-        Post("1", "John",LocalDateTime.now(),"Funniest Dad Joke", "Why don't skeletons fight each other? Because they don't have the guts!", listOf(), 0, listOf()),
-        Post("2", "Bob",LocalDateTime.now(), "Like Chickens?", "The chicken crossed the road to get to the other side.", listOf(), 0, listOf()),
-        Post("3", "Charles",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf()),
-        Post("3", "Ryan",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf()),
-        Post("3", "Brandon",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf())
+        Post("1", "John",LocalDateTime.now(),"Funniest Dad Joke", "Why don't skeletons fight each other? Because they don't have the guts!", listOf(), 0, Post.ControversialType.Other),
+        Post("2", "Bob",LocalDateTime.now(), "Like Chickens?", "The chicken crossed the road to get to the other side.", listOf(), 0, Post.ControversialType.Other),
+        Post("3", "Charles",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, Post.ControversialType.Other),
+        Post("3", "Ryan",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, Post.ControversialType.Other),
+        Post("3", "Brandon",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, Post.ControversialType.Other)
     )
 
 
