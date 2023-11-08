@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.example.emptyactivity.DataModels.Post
+import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
 import com.example.emptyactivity.postListProvider
@@ -57,7 +58,7 @@ import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalStdlibApi::class)
 @Composable
-fun CreatePost(modifier: Modifier = Modifier){
+fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
 
     var title by rememberSaveable { mutableStateOf("")}
 
@@ -74,8 +75,6 @@ fun CreatePost(modifier: Modifier = Modifier){
     var dropDownExpanded by rememberSaveable {
         mutableStateOf(false)
     }
-
-    var postList = postListProvider.current
 
     MainLayout {
         Column(modifier =
@@ -194,14 +193,14 @@ fun CreatePost(modifier: Modifier = Modifier){
                         }
 
                         Button(onClick = {
-                            postList.add(
+                            postViewModel.addPost(
                                 Post(
-                                    "${postList.size}"
-                                    , " ", // Need to fix this
+                                    "default this gets set in firebase" //gross but no need to change this
+                                    , "username", // Need to fix this, when real username has been added
                                     LocalDateTime.now(),
                                     title,
                                     content,
-                                    listOf(),
+                                    mutableListOf(),
                                     (controversial * 100).toInt(),
                                     controversialType
                                 )
