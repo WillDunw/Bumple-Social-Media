@@ -30,4 +30,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         }
     }
 
+    fun likePost(post: Post){
+        viewModelScope.launch {
+            postRepository.likePost(post)
+        }
+    }
+
 }
