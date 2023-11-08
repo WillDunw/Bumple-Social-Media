@@ -184,7 +184,7 @@ fun CreatePost(modifier: Modifier = Modifier){
                                 expanded = dropDownExpanded,
                                 onDismissRequest = { dropDownExpanded = false }) {
                                 enumValues<Post.ControversialType>().forEach {
-                                    DropdownMenuItem(text = { Text(text = it.name, color = Color(255,197,78)) }, onClick = {
+                                    DropdownMenuItem(text = { Text(text = it.name, color = Color(0,0,0)) }, onClick = {
                                         controversialType = it
                                         dropDownExpanded = false
                                     })
