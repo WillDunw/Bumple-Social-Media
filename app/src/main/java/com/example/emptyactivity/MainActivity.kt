@@ -17,6 +17,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import com.example.emptyactivity.DataModels.Post
+import com.example.emptyactivity.DataModels.PostRepositoryFirestore
+import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.Pages.SignIn
 import com.example.emptyactivity.navigation.Router
@@ -33,11 +35,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    val postList = rememberMutableStateListOf<Post>()
+                    val postModel = PostViewModel(PostRepositoryFirestore())
 
-                    CompositionLocalProvider(postListProvider provides postList) {
-                            Router()
-                    }
+                            Router(postModel)
                 }
             }
         }

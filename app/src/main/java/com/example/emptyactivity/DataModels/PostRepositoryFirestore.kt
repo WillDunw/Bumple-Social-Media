@@ -1,6 +1,7 @@
 package com.example.emptyactivity.DataModels
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.time.LocalDateTime
 
-val collectionName = "Posts"
+const val collectionName = "Posts"
 
 class PostRepositoryFirestore() : PostRepository{
     val db = Firebase.firestore
@@ -36,7 +37,7 @@ class PostRepositoryFirestore() : PostRepository{
                 success = true
             }
             .addOnFailureListener{e ->
-
+                Log.e(null,e.message!!)
             }
 
         return success
@@ -86,14 +87,14 @@ class PostRepositoryFirestore() : PostRepository{
         var controversialType = Post.ControversialType.valueOf(doc.get("controversialType").toString())
 
         return Post(id, username.toString(), postDate, title.toString(), content.toString(),
-            likes as List<String>, controversialRatingParsed, controversialType)
+            likes as MutableList<String>, controversialRatingParsed, controversialType)
     }
     override fun getAllPostsLiked(userId: String): List<Post> {
         TODO("Not yet implemented")
     }
 
-    override fun likePost(userId: String, postId: String) {
-        TODO("Not yet implemented")
+    override suspend fun likePost(post: Post) {
+        db.collection(collectionName).document(post._id).update("likes", post._likes)
     }
 
     override suspend fun delete(id: String) {

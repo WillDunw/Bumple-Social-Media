@@ -24,12 +24,14 @@ import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import com.example.emptyactivity.DataModels.PostViewModel
 
 @Composable
-fun ViewAccount() {
+fun ViewAccount(postViewModel: PostViewModel) {
     MainLayout {
 
         Column(
@@ -77,14 +79,17 @@ fun ViewAccount() {
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Joke Cards
-            Jokes(
-                "Funny. Non-offensive",
-                "Why did the chicken cross the road? To get to the other side."
-            )
-            Jokes(
-                "Dad joke ", "Why don't skeletons fight each other? They don't have the guts!"
-            )
+            LazyColumn() {
+                items(2){
+                    Jokes(
+                        "Funny. Non-offensive",
+                        "Why did the chicken cross the road? To get to the other side."
+                    )
+                    Jokes(
+                        "Dad joke ", "Why don't skeletons fight each other? They don't have the guts!"
+                    )
+                }
+            }
 
         }
     }
