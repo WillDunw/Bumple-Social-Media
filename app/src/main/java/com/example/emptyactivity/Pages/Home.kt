@@ -14,28 +14,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.emptyactivity.DataModels.PostRepositoryFirestore
+import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Layout.MainLayout
+import kotlinx.coroutines.CoroutineScope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(){
 
-    // Seed posts
-    val posts = listOf(
-        Post("1", "John",LocalDateTime.now(),"Funniest Dad Joke", "Why don't skeletons fight each other? Because they don't have the guts!", listOf(), 0, listOf()),
-        Post("2", "Bob",LocalDateTime.now(), "Like Chickens?", "The chicken crossed the road to get to the other side.", listOf(), 0, listOf()),
-        Post("3", "Charles",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf()),
-        Post("3", "Ryan",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf()),
-        Post("3", "Brandon",LocalDateTime.now(), "Best Pun", "Why did the scarecrow win an award?\nBecause he was outstanding in his field!", listOf(), 0, listOf())
-    )
+    val vm = PostViewModel(PostRepositoryFirestore())
 
+    val postsFromFirebase = vm.allPosts.collectAsState()
 
     MainLayout {
         LazyColumn(
@@ -43,7 +41,7 @@ fun Home(){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            items(posts) { post ->
+            items(postsFromFirebase.value) { post ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -63,7 +61,7 @@ fun Home(){
                             text = post._title,
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = "By: " + post._name)
+                        Text(text = "By: " + post._username)
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(
                             text = post._content

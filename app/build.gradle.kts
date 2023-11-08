@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -69,4 +72,7 @@ dependencies {
 
     implementation("androidx.compose.material:material-android:1.5.1")
     implementation("androidx.navigation:navigation-compose:2.7.3")
+
+    implementation("com.google.firebase:firebase-firestore")
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
 }
