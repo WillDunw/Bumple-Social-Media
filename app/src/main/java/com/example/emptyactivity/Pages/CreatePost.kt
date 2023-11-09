@@ -54,6 +54,7 @@ import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
+import com.example.emptyactivity.navigation.Routes
 import com.example.emptyactivity.postListProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -199,7 +200,6 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
                         }
 
                         Button(onClick = {
-                            var test = title
                             if(title.isNullOrEmpty()){
                                Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
                             } else if(content.isNullOrEmpty()){
@@ -218,6 +218,8 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
                                         controversialType
                                     )
                                 )
+
+                                navController.navigate(Routes.Account.route)
                             }
                         },
                             modifier = modifier

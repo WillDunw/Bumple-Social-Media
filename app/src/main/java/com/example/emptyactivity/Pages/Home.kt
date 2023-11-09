@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.emptyactivity.DataModels.PostViewModel
+import java.util.Random
 
 
 @RequiresApi(Build.VERSION_CODES.O)

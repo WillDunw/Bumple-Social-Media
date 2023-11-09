@@ -24,14 +24,47 @@ import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
 
 @Composable
 fun ViewAccount(postViewModel: PostViewModel) {
+
+    var myPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
+        p._username == "username"
+    }
+
+    var myLikedPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
+        p._likes.contains("username")
+    }
+
+    //only have one to track our post view, hopefully name is clear
+    var isViewingLikedPosts by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     MainLayout {
 
         Column(
@@ -49,7 +82,6 @@ fun ViewAccount(postViewModel: PostViewModel) {
                     .scale(1.7f) // image zoom adjuster
 
             )
-
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -73,26 +105,54 @@ fun ViewAccount(postViewModel: PostViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // chatgpt -> how can i have a grid like box section
-                SmallBox(text = "Posts", "2")
+                SmallBox(text = "Posts", myPosts.size.toString())
                 SmallBox(text = "Followers", "81k")
                 SmallBox(text = "Following", "224")
             }
             Spacer(modifier = Modifier.height(16.dp))
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                Button(onClick = { isViewingLikedPosts = false },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = GetColorFromViewChoice(!isViewingLikedPosts)),
+                    elevation = ButtonDefaults.buttonElevation(2.dp)) {
+                    Icon(imageVector = Icons.Default.AccountBox, contentDescription = "My Posts")
+                }
+
+                Button(onClick = { isViewingLikedPosts = true },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = GetColorFromViewChoice(isViewingLikedPosts)),
+                    elevation = ButtonDefaults.buttonElevation(2.dp)) {
+                    Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "My Liked Posts")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             LazyColumn() {
-                items(2){
-                    Jokes(
-                        "Funny. Non-offensive",
-                        "Why did the chicken cross the road? To get to the other side."
-                    )
-                    Jokes(
-                        "Dad joke ", "Why don't skeletons fight each other? They don't have the guts!"
-                    )
+                if(isViewingLikedPosts){
+                    items(myLikedPosts){
+                        PostBox(post = it, postViewModel = postViewModel)
+                    }
+                } else {
+                    items(myPosts){
+                        PostBoxWithDelete(post = it, postViewModel = postViewModel)
+                    }
                 }
             }
 
         }
     }
+}
+
+fun GetColorFromViewChoice(isChosen: Boolean) : Color {
+    if(isChosen)
+        return Color(247, 212, 95)
+
+    return Color(247, 237, 95)
 }
 
 @Composable
@@ -130,3 +190,112 @@ fun Jokes(header: String, text: String) {
     }
 }
 
+@Composable
+fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel){
+    var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post)) }
+
+    var displayPostDeleteConfirmation by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if(displayPostDeleteConfirmation){
+        AlertDialog(onDismissRequest = { displayPostDeleteConfirmation = false },
+
+            confirmButton = {
+                            TextButton(onClick = {
+                                displayPostDeleteConfirmation = false
+                                    postViewModel.deletePost(post)
+                            }) {
+                                Text(text = "Delete")
+                            }
+            },
+
+            icon = { Icon(imageVector = Icons.Default.Info, contentDescription = "Are you sure you want to delete?")},
+            
+            title = { Text(text = "Delete confirmation")},
+            
+            text = { Text(text = "Are you sure you want to delete post ${post._title}?")},
+
+            dismissButton = { TextButton(onClick = { displayPostDeleteConfirmation = false }) {
+                Text(text = "Cancel")
+            }}
+
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(5.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = post._title,
+                fontWeight = FontWeight.Bold
+            )
+            Text(text = "By: " + post._username)
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = post._content
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(8.dp)
+                .clip(CircleShape)
+                .background(Color.Blue)
+                .clickable {
+                    onLikeButtonClick(post, postViewModel)
+                    heartDisplayColor = determineHeartDisplayColor(post)
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "$heartDisplayColor  ${post._likes.count()}",
+                color = Color.White,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+
+        Box(modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .padding(8.dp)
+            .clip(CircleShape)
+            .background(Color.Blue)
+            .clickable {
+                if (!displayPostDeleteConfirmation)
+                    displayPostDeleteConfirmation = true
+            }
+        )
+        {
+            Text(text = "Delete", color = Color.White, modifier = Modifier.padding(8.dp))
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(8.dp)
+                .clip(CircleShape)
+                .background(Color.Blue),
+            contentAlignment = Alignment.Center
+
+        ){
+            Text(
+                text = "\uD83D\uDCAC  ${post._likes.count()}", // NEED TO ADD COMMENTS
+                color = Color.White,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    }
+}
