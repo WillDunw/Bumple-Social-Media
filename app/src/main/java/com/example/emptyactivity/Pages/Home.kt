@@ -37,9 +37,9 @@ fun Home(postViewModel: PostViewModel){
                 //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
                 //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
                 //and the username values at the bottom need to be replaced too
-                p._controversialType == Post.ControversialType.None || !Post.ControversialType.values().contains(p._controversialType)
+                p._controversialType == Post.ControversialType.None || Post.ControversialType.values().contains(p._controversialType)
                 && p._username != "username" && !p._likes.contains("username")
-    }
+    }.shuffled()
 
     MainLayout {
         LazyColumn(
