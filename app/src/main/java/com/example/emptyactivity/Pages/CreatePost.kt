@@ -1,6 +1,7 @@
 package com.example.emptyactivity.Pages
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +52,7 @@ import androidx.compose.ui.unit.em
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Layout.MainLayout
+import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
 import com.example.emptyactivity.postListProvider
 import java.time.LocalDate
@@ -69,12 +72,15 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
     }
 
     var controversialType by rememberSaveable {
-        mutableStateOf(Post.ControversialType.Other)
+        mutableStateOf(Post.ControversialType.None)
     }
 
     var dropDownExpanded by rememberSaveable {
         mutableStateOf(false)
     }
+
+    val context = LocalContext.current
+    var navController = LocalNavController.current
 
     MainLayout {
         Column(modifier =
@@ -193,18 +199,26 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
                         }
 
                         Button(onClick = {
-                            postViewModel.addPost(
-                                Post(
-                                    "default this gets set in firebase" //gross but no need to change this
-                                    , "username", // Need to fix this, when real username has been added
-                                    LocalDateTime.now(),
-                                    title,
-                                    content,
-                                    mutableListOf(),
-                                    (controversial * 100).toInt(),
-                                    controversialType
+                            var test = title
+                            if(title.isNullOrEmpty()){
+                               Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
+                            } else if(content.isNullOrEmpty()){
+                                Toast.makeText(context, "Content cannot be empty", Toast.LENGTH_SHORT).show()
+                            } else {
+                                postViewModel.addPost(
+                                    Post(
+                                        "default this gets set in firebase" //gross but no need to change this
+                                        ,
+                                        "username", // Need to fix this, when real username has been added
+                                        LocalDateTime.now(),
+                                        title,
+                                        content,
+                                        mutableListOf(),
+                                        (controversial * 100).toInt(),
+                                        controversialType
+                                    )
                                 )
-                            )
+                            }
                         },
                             modifier = modifier
                                 .padding(end = 10.dp),
