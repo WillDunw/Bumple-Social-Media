@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.Layout.MainLayout
-import java.time.LocalDateTime
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,19 +24,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.emptyactivity.DataModels.PostRepositoryFirestore
 import com.example.emptyactivity.DataModels.PostViewModel
-import com.example.emptyactivity.Layout.MainLayout
-import kotlinx.coroutines.CoroutineScope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(postViewModel: PostViewModel){
 
-    val postsFromFirebase = postViewModel.allPosts.collectAsState()
-
-
+    //disgusting I agree, pls propose better solution if you can find
+    val postsFiltered = postViewModel.allPosts.collectAsState().value.filter { p ->
+        p._controversialRating < 0 /*replace with current uer's controversial rating*/ &&
+                //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
+                //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
+                //and the username values at the bottom need to be replaced too
+                p._controversialType == Post.ControversialType.None || Post.ControversialType.values().contains(p._controversialType)
+                && p._username != "username" && !p._likes.contains("username")
+    }.shuffled()
 
     MainLayout {
         LazyColumn(
@@ -46,7 +47,7 @@ fun Home(postViewModel: PostViewModel){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            items(postsFromFirebase.value) { post ->
+            items(postsFiltered) { post ->
                 PostBox(post = post, postViewModel)
             }
         }
