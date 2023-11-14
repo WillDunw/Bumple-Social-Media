@@ -42,6 +42,8 @@ fun Home(postViewModel: PostViewModel){
                 && p._username != "username" && !p._likes.contains("username")
     }.shuffled()
 
+    var test = postViewModel.allPosts.collectAsState().value
+
     MainLayout {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
