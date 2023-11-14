@@ -24,12 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.emptyactivity.navigation.LocalNavController
+import com.example.emptyactivity.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +44,7 @@ fun LoginScreen(
     val loginUiState = loginViewModel?.loginUiState
     val isError = loginUiState?.loginError != null
     val context = LocalContext.current
+    val navHost = LocalNavController.current
 
 
     Column(
@@ -61,7 +65,9 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(24.dp),
             value = loginUiState?.username?:"",
-            onValueChange = {loginViewModel?.onUsernameChange(it)},
+            onValueChange = {
+                loginViewModel?.onUsernameChange(it)
+                            },
             leadingIcon = {
                 Icon(imageVector = Icons.Default.Person, contentDescription=  null )
             },
@@ -95,7 +101,7 @@ fun LoginScreen(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             Text(text = "don't have an account?")
             Spacer(modifier =Modifier.size(8.dp))
-            TextButton(onClick = { onNavToSignUpPage.invoke() }) {
+            TextButton(onClick = { navHost.navigate(Routes.SignUp.route) }) {
                 Text(text = "Sign Up")
             }
 

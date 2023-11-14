@@ -21,6 +21,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.emptyactivity.Auth.AuthRepository
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostRepositoryFirestore
 import com.example.emptyactivity.DataModels.PostViewModel
@@ -44,10 +45,10 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    Navigation(loginViewModel = loginViewModel)
                     val postModel = PostViewModel(PostRepositoryFirestore())
+                    val loginViewModel = LoginViewModel(AuthRepository())
 
-                            Router(postModel)
+                            Router(postModel, loginViewModel)
                 }
             }
         }

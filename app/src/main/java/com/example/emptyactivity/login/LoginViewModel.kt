@@ -90,6 +90,9 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
             if (!validateLoginForm()) {
                 throw IllegalArgumentException("email and password cannot be empty")
             }
+
+
+
             loginUiState = loginUiState.copy(isLoading = true)
 
 
