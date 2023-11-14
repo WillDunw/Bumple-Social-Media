@@ -46,7 +46,7 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
     // to change the state of the user interface ^
 
     private fun validateLoginForm() =
-        loginUiState.username.isBlank() && loginUiState.password.isNotBlank()
+        loginUiState.username.isBlank() && loginUiState.password.isBlank()
 
     private fun validateSignUpForm() =
         loginUiState.usernameSignUp.isNotBlank() && loginUiState.passwordSignUp.isNotBlank() && loginUiState.confirmPasswordSignUp.isNotBlank()
@@ -56,6 +56,7 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
             if (!validateSignUpForm()) {
                 throw IllegalArgumentException("email and password cannot be empty")
             }
+
             loginUiState = loginUiState.copy(isLoading = true)
 
             if(loginUiState.passwordSignUp != loginUiState.confirmPasswordSignUp){
@@ -87,10 +88,9 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
 
     fun loginUser(context: Context) = viewModelScope.launch {
         try {
-            if (!validateLoginForm()) {
+            if (validateLoginForm()) {
                 throw IllegalArgumentException("email and password cannot be empty")
             }
-
 
 
             loginUiState = loginUiState.copy(isLoading = true)

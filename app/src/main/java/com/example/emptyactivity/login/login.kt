@@ -72,7 +72,7 @@ fun LoginScreen(
                 Icon(imageVector = Icons.Default.Person, contentDescription=  null )
             },
             label = {
-                Text(text = "Email")
+                Text(text = "Username")
             },
             isError = isError,
         )
@@ -156,12 +156,12 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .padding(24.dp),
             value = loginUiState?.usernameSignUp?:"",
-            onValueChange = {loginViewModel?.onPasswordSignUpChange(it)},
+            onValueChange = {loginViewModel?.onUsernameSignUpChange(it)},
             leadingIcon = {
                 Icon(imageVector = Icons.Default.Person, contentDescription=  null )
             },
             label = {
-                Text(text = "Email")
+                Text(text = "Username")
             },
             isError = isError,
         )
