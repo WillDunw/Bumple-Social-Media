@@ -1,8 +1,11 @@
 package com.example.emptyactivity
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,6 +19,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
+import com.example.emptyactivity.DataModels.CommentRepositoryFirestore
+import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostRepositoryFirestore
 import com.example.emptyactivity.DataModels.PostViewModel
@@ -27,6 +32,8 @@ import com.example.emptyactivity.ui.theme.EmptyActivityTheme
 val postListProvider = compositionLocalOf<SnapshotStateList<Post>> {error("Error with post provider.")  }
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SuspiciousIndentation")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -36,8 +43,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     val postModel = PostViewModel(PostRepositoryFirestore())
+                    val commentModel = CommentViewModel(CommentRepositoryFirestore())
 
-                            Router(postModel)
+                            Router(postModel, commentModel)
                 }
             }
         }

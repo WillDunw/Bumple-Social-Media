@@ -13,11 +13,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,19 +28,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostRepositoryFirestore
 import com.example.emptyactivity.DataModels.PostViewModel
+import com.example.emptyactivity.DataModels.collectionNameComments
 import com.example.emptyactivity.Layout.MainLayout
 import kotlinx.coroutines.CoroutineScope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Home(postViewModel: PostViewModel, commentViewMode: CommentViewModel){
+fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
 
     val postsFromFirebase = postViewModel.allPosts.collectAsState()
-    val commentsFromFirebase = commentViewMode.allComments.collectAsState()
+    val commentsFromFirebase = commentViewModel.allComments.collectAsState()
 
 
 
@@ -49,14 +53,14 @@ fun Home(postViewModel: PostViewModel, commentViewMode: CommentViewModel){
             verticalArrangement = Arrangement.Center
         ) {
             items(postsFromFirebase.value) { post ->
-                PostBox(post = post, postViewModel)
+                PostBox(post = post, postViewModel, listComment = commentsFromFirebase.value)
             }
         }
     }
 }
 
 @Composable
-fun PostBox(post: Post, postViewModel: PostViewModel){
+fun PostBox(post: Post, postViewModel: PostViewModel, listComment: List<Comment>){
     var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post))}
 
     Box(
@@ -116,7 +120,7 @@ fun PostBox(post: Post, postViewModel: PostViewModel){
 
         ){
             Text(
-                text = "\uD83D\uDCAC  ${post._likes.count()}", // NEED TO ADD COMMENTS
+                text = "\uD83D\uDCAC  ${0}", // NEED TO ADD COMMENTS
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
             )
@@ -133,10 +137,6 @@ fun onLikeButtonClick(post: Post, postViewModel: PostViewModel){
     }
 
     postViewModel.likePost(post)
-}
-
-fun onCommentButtonClick(post: Post, postViewModel: PostViewModel){
-
 }
 
 //NEED USERNAME PLUGGED HERE

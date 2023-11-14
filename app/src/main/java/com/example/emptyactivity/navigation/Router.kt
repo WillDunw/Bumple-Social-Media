@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Pages.CreatePost
 import com.example.emptyactivity.Pages.Home
@@ -19,13 +20,13 @@ val LocalNavController = compositionLocalOf<NavController> { error("No nav contr
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Router(postViewModel : PostViewModel){
+fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel){
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalNavController provides navController) {
         NavHost(navController = navController, startDestination = Routes.SignUp.route) {
             composable(Routes.Home.route){
-                Home(postViewModel)
+                Home(postViewModel, commentViewModel)
             }
 
             composable(Routes.CreatePost.route){

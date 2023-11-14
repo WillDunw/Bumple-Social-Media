@@ -25,7 +25,7 @@ class CommentRepositoryFirestore() : CommentRepository{
         var success = false;
 
         val hashedComment = hashMapOf(
-            "userId" to comment._userId,
+            "username" to comment._userId,
             "postId" to comment._postId,
             "comment" to comment._comment
         )
@@ -44,7 +44,7 @@ class CommentRepositoryFirestore() : CommentRepository{
 
     @SuppressLint("NewApi")
     override suspend fun getAllComments(): Flow<List<Comment>> = callbackFlow {
-        val subscription = db.collection(collectionName).addSnapshotListener { snapshot, error ->
+        val subscription = db.collection(collectionNameComments).addSnapshotListener { snapshot, error ->
             if (error != null) {
                 println("Listen failed: $error")
                 return@addSnapshotListener
@@ -74,9 +74,9 @@ class CommentRepositoryFirestore() : CommentRepository{
     private fun getAllCommentsFromDocument(doc: DocumentSnapshot) : Comment
     {
         var id = doc.id
-        var userId = doc.get("userId") as String
-        var postId = doc.get("postId") as String
-        var comment = doc.get("comment") as String
+        var userId = doc.get("username").toString()
+        var postId = doc.get("postId").toString()
+        var comment = doc.get("comment").toString()
 
 
         return Comment(id, userId, comment, postId);
