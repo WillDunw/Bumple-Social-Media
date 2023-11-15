@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.emptyactivity.DataModels.PostViewModel
+import java.util.Random
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,6 +41,8 @@ fun Home(postViewModel: PostViewModel){
                 p._controversialType == Post.ControversialType.None || Post.ControversialType.values().contains(p._controversialType)
                 && p._username != "username" && !p._likes.contains("username")
     }.shuffled()
+
+    var test = postViewModel.allPosts.collectAsState().value
 
     MainLayout {
         LazyColumn(

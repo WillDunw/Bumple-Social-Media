@@ -37,4 +37,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         }
     }
 
+    fun deletePost(post: Post){
+        viewModelScope.launch {
+            postRepository.delete(post._id)
+        }
+    }
+
 }
