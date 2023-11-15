@@ -89,15 +89,12 @@ class PostRepositoryFirestore() : PostRepository{
         return Post(id, username.toString(), postDate, title.toString(), content.toString(),
             likes as MutableList<String>, controversialRatingParsed, controversialType)
     }
-    override fun getAllPostsLiked(userId: String): List<Post> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun likePost(post: Post) {
         db.collection(collectionName).document(post._id).update("likes", post._likes)
     }
 
     override suspend fun delete(id: String) {
-        TODO("Not yet implemented")
+        db.collection(collectionName).document(id).delete()
     }
 }

@@ -1,5 +1,5 @@
 package com.example.emptyactivity.DataModels
 
-class Comment(_id: String, _userId: String, _postId: String, _comment: String) {
+public class Comment(val _id: String, val _userId: String, val _postId: String, val _comment: String) {
 
 }

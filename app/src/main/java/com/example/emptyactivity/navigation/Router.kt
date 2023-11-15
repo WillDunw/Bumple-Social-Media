@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.Pages.CreatePost
 import com.example.emptyactivity.Pages.Home
@@ -17,18 +18,19 @@ import com.example.emptyactivity.Pages.ViewAccount
 import com.example.emptyactivity.login.LoginScreen
 import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.login.SignUpScreen
+import kotlin.random.Random
 
 val LocalNavController = compositionLocalOf<NavController> { error("No nav controller found :(")  }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Router(postViewModel : PostViewModel, loginViewModel: LoginViewModel){
+fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, loginViewModel: LoginViewModel){
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalNavController provides navController) {
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Home.route){
-                Home(postViewModel)
+                Home(postViewModel, commentViewModel)
             }
 
             composable(Routes.CreatePost.route){
@@ -36,7 +38,7 @@ fun Router(postViewModel : PostViewModel, loginViewModel: LoginViewModel){
             }
 
             composable(Routes.Account.route){
-                ViewAccount(postViewModel)
+                ViewAccount(postViewModel, commentViewModel)
             }
 
 //            composable(Routes.SignUp.route){

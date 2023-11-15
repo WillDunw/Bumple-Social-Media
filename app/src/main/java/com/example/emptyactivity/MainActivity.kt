@@ -22,6 +22,8 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.emptyactivity.Auth.AuthRepository
+import com.example.emptyactivity.DataModels.CommentRepositoryFirestore
+import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostRepositoryFirestore
 import com.example.emptyactivity.DataModels.PostViewModel
@@ -47,8 +49,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val postModel = PostViewModel(PostRepositoryFirestore())
                     val loginViewModel = LoginViewModel(AuthRepository())
+                    val commentModel = CommentViewModel(CommentRepositoryFirestore())
 
-                            Router(postModel, loginViewModel)
+                            Router(postModel, commentModel, loginViewModel)
                 }
             }
         }
