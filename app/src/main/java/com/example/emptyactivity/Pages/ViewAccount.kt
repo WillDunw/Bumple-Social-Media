@@ -35,13 +35,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.emptyactivity.DataModels.PostViewModel
+import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ViewAccount(postViewModel: PostViewModel) {
-    val navController = rememberNavController()
+    val navController = LocalNavController.current
 
     MainLayout {
         Column(
@@ -53,7 +54,7 @@ fun ViewAccount(postViewModel: PostViewModel) {
 
             Button(onClick = {
                 FirebaseAuth.getInstance().signOut()
-//                navController.navigate(Routes.Login.route)
+                navController.navigate(Routes.Login.route)
 
             }) {
                 Text(text = "sign Out")

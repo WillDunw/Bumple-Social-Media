@@ -105,6 +105,9 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
                 if (isSuccessful) {
                     Toast.makeText(context, "success login", Toast.LENGTH_SHORT).show()
                     loginUiState = loginUiState.copy(isSuccessLogin = true)
+                    loginUiState.username = "";
+                    loginUiState.password = "";
+
                 }
                 else {
                     Toast.makeText(context, "failed login", Toast.LENGTH_SHORT).show()
@@ -121,17 +124,17 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
     }
 
     data class LoginUiState(
-    val username: String = "",
-    val password: String = "",
-    val usernameSignUp: String = "",
-    val passwordSignUp: String = "",
-    val confirmPasswordSignUp: String = "",
-    val isLoading: Boolean = false,
-    val isSuccessLogin: Boolean = false,
-    val signUpError:String? = null,
-    val loginError: String? = null,
+        var username: String = "",
+        var password: String = "",
+        val usernameSignUp: String = "",
+        val passwordSignUp: String = "",
+        val confirmPasswordSignUp: String = "",
+        val isLoading: Boolean = false,
+        val isSuccessLogin: Boolean = false,
+        val signUpError:String? = null,
+        val loginError: String? = null,
 
 
-)
+        )
 
 }
