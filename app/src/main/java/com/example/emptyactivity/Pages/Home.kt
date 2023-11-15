@@ -46,7 +46,7 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
 
     //disgusting I agree, pls propose better solution if you can find
     val postsFiltered = postViewModel.allPosts.collectAsState().value.filter { p ->
-        p._controversialRating < 0 /*replace with current uer's controversial rating*/ &&
+        p._controversialRating >= 0 /*replace with current uer's controversial rating*/ &&
                 //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
                 //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
                 //and the username values at the bottom need to be replaced too
