@@ -15,17 +15,20 @@ import com.example.emptyactivity.Pages.CreatePost
 import com.example.emptyactivity.Pages.Home
 import com.example.emptyactivity.Pages.SignIn
 import com.example.emptyactivity.Pages.ViewAccount
+import com.example.emptyactivity.login.LoginScreen
+import com.example.emptyactivity.login.LoginViewModel
+import com.example.emptyactivity.login.SignUpScreen
 import kotlin.random.Random
 
 val LocalNavController = compositionLocalOf<NavController> { error("No nav controller found :(")  }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel){
+fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, loginViewModel: LoginViewModel){
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        NavHost(navController = navController, startDestination = Routes.SignUp.route) {
+        NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Home.route){
                 Home(postViewModel, commentViewModel)
             }
@@ -38,8 +41,41 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel){
                 ViewAccount(postViewModel, commentViewModel)
             }
 
-            composable(Routes.SignUp.route){
-                SignIn()
+//            composable(Routes.SignUp.route){
+//                SignIn()
+//            }
+
+            composable(route = Routes.Login.route){
+                LoginScreen(onNavToHomePage = {
+                    navController.navigate(Routes.Home.route){
+                        launchSingleTop = true
+                        popUpTo(route = Routes.Login.route){
+                            inclusive = true
+                        }
+                    }
+                }, onNavToSignUpPage = {
+                    navController.navigate(Routes.Login.route){
+                        launchSingleTop = true
+                        popUpTo(route = Routes.Login.route){
+                            inclusive = true
+                        }
+                    }
+                }, loginViewModel = loginViewModel)
+            }
+
+
+
+            composable(route = Routes.SignUp.route){
+                SignUpScreen(onNavToHomePage ={
+                    navController.navigate(Routes.Home.route){
+                        popUpTo(route = Routes.SignUp.route){
+                            inclusive = true
+                        }
+                    }
+                }, loginViewModel = loginViewModel
+                    ){
+                    navController.navigate(Routes.Login.route)
+                }
             }
         }
     }
