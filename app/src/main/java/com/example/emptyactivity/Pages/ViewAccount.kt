@@ -57,7 +57,7 @@ fun ViewAccount(postViewModel: PostViewModel) {
     }
 
     var myLikedPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
-        p._likes.contains("username")
+        p._likes.contains("username") && p._username != "username"
     }
 
     //only have one to track our post view, hopefully name is clear
