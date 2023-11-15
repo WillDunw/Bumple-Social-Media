@@ -35,7 +35,7 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel){
             }
 
             composable(Routes.Account.route){
-                ViewAccount(postViewModel)
+                ViewAccount(postViewModel, commentViewModel)
             }
 
             composable(Routes.SignUp.route){

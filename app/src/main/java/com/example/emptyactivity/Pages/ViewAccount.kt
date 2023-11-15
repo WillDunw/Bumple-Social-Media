@@ -39,6 +39,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.ComposeNodeLifecycleCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,11 +47,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import com.example.emptyactivity.DataModels.Comment
+import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
 
 @Composable
-fun ViewAccount(postViewModel: PostViewModel) {
+fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel) {
 
     var myPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
         p._username == "username"
@@ -64,6 +67,10 @@ fun ViewAccount(postViewModel: PostViewModel) {
     var isViewingLikedPosts by rememberSaveable {
         mutableStateOf(false)
     }
+
+    val commentsFromFirebase = commentViewModel.allComments.collectAsState().value
+    var isCommenting by rememberSaveable { mutableStateOf(false) }
+    var postCommenting : Post? = null
 
     MainLayout {
 
@@ -133,16 +140,60 @@ fun ViewAccount(postViewModel: PostViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn() {
-                if(isViewingLikedPosts){
-                    items(myLikedPosts){
-                        PostBox(post = it, postViewModel = postViewModel)
+
+                if (isViewingLikedPosts) {
+                    items(myLikedPosts) {
+                        PostBox(post = it, postViewModel = postViewModel, commentsFromFirebase, setCommentingCallback = {isCommenting = true; postCommenting = it})
                     }
                 } else {
-                    items(myPosts){
-                        PostBoxWithDelete(post = it, postViewModel = postViewModel)
+                    items(myPosts) {
+                        PostBoxWithDelete(post = it, postViewModel = postViewModel, commentsFromFirebase, setCommentingCallback = {isCommenting = true; postCommenting = it})
                     }
                 }
             }
+                /*if(isViewingLikedPosts){
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (isCommenting) {
+                            CommentingBox(listComment = commentsFromFirebase, post = postCommenting, commentViewModel = commentViewModel)
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                items(myLikedPosts) { post ->
+                                    PostBox(
+                                        post = post,
+                                        postViewModel,
+                                        listComment = commentsFromFirebase,
+                                        setCommentingCallback = {isCommenting = true; postCommenting = post}
+                                    )
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (isCommenting) {
+                            CommentingBox(listComment = commentsFromFirebase, post = postCommenting, commentViewModel = commentViewModel)
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                items(myPosts) { post ->
+                                    PostBoxWithDelete(
+                                        post = post,
+                                        postViewModel,
+                                        listComment = commentsFromFirebase,
+                                        setCommentingCallback = {isCommenting = true; postCommenting = post}
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }*/
 
         }
     }
@@ -191,7 +242,7 @@ fun Jokes(header: String, text: String) {
 }
 
 @Composable
-fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel){
+fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: List<Comment>, setCommentingCallback: () -> Unit){
     var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post)) }
 
     var displayPostDeleteConfirmation by rememberSaveable {
@@ -287,12 +338,15 @@ fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel){
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
                 .clip(CircleShape)
-                .background(Color.Blue),
+                .background(Color.Blue)
+                .clickable { setCommentingCallback() },
             contentAlignment = Alignment.Center
 
         ){
             Text(
-                text = "\uD83D\uDCAC  ${post._likes.count()}", // NEED TO ADD COMMENTS
+                text = "\uD83D\uDCAC  ${listComment.filter { c -> 
+                    c._postId == post._id
+                }.count()}", // NEED TO ADD COMMENTS
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
             )

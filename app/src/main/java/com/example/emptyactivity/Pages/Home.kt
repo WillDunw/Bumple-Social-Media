@@ -54,8 +54,6 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
                 && p._username != "username" && !p._likes.contains("username")
     }.shuffled()
 
-    var test = postViewModel.allPosts.collectAsState().value
-
     MainLayout {
 
         Box(modifier = Modifier.fillMaxSize()) {
