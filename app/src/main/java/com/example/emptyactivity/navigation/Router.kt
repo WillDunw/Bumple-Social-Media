@@ -15,6 +15,7 @@ import com.example.emptyactivity.Pages.CreatePost
 import com.example.emptyactivity.Pages.Home
 import com.example.emptyactivity.Pages.SignIn
 import com.example.emptyactivity.Pages.ViewAccount
+import kotlin.random.Random
 
 val LocalNavController = compositionLocalOf<NavController> { error("No nav controller found :(")  }
 

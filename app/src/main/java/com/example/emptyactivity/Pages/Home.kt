@@ -33,20 +33,31 @@ import androidx.compose.ui.unit.dp
 import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostViewModel
+import java.util.Random
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
 
-    val postsFromFirebase = postViewModel.allPosts.collectAsState()
     val commentsFromFirebase = commentViewModel.allComments.collectAsState()
     var isCommenting by rememberSaveable { mutableStateOf(false) }
     var postCommenting : Post? = null
 
+    //disgusting I agree, pls propose better solution if you can find
+    val postsFiltered = postViewModel.allPosts.collectAsState().value.filter { p ->
+        p._controversialRating < 0 /*replace with current uer's controversial rating*/ &&
+                //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
+                //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
+                //and the username values at the bottom need to be replaced too
+                p._controversialType == Post.ControversialType.None || Post.ControversialType.values().contains(p._controversialType)
+                && p._username != "username" && !p._likes.contains("username")
+    }.shuffled()
 
+    var test = postViewModel.allPosts.collectAsState().value
 
     MainLayout {
+
         Box(modifier = Modifier.fillMaxSize()) {
             if (isCommenting) {
                 CommentingBox(listComment = commentsFromFirebase.value, post = postCommenting, commentViewModel = commentViewModel)
@@ -56,7 +67,7 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    items(postsFromFirebase.value) { post ->
+                    items(postsFiltered) { post ->
                         PostBox(
                             post = post,
                             postViewModel,
