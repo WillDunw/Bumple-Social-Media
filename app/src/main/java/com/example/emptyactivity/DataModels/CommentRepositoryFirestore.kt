@@ -79,7 +79,7 @@ class CommentRepositoryFirestore() : CommentRepository{
         var comment = doc.get("comment").toString()
 
 
-        return Comment(id, userId, comment, postId);
+        return Comment(id, userId, postId, comment);
     }
 
     override suspend fun delete(id: String) {
