@@ -15,10 +15,9 @@
   8. Once you're logged in / signed up the following feature will be available to you. 
 
 ## Screenshots of application
-![Create a post](/image.png)
-![News Feed](/image1.png)
-![User Post](/image2.png)
-![signIn](https://github.com/WillDunw/AppDev3-Project-5A6/assets/77261159/d212c73b-f3a3-4745-b6bf-1710b311b45d)
+![Create a post](/bumpleCreatePost.png)
+![News Feed](/bumpleHomeScreen.png)
+![User Post](/bumpleViewOwnAccount.png)
 
 
 
