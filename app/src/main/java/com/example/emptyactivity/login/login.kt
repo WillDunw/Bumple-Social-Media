@@ -31,21 +31,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.emptyactivity.DataModels.User
+import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    userModel : UserViewModel,
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage: () -> Unit,
-    onNavToSignUpPage: () -> Unit,
+    onNavToSignUpPage: () -> Unit
 ) {
     val loginUiState = loginViewModel?.loginUiState
     val isError = loginUiState?.loginError != null
     val context = LocalContext.current
     val navHost = LocalNavController.current
-
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -113,18 +115,25 @@ fun LoginScreen(
 
         LaunchedEffect(key1 = loginViewModel?.hasUser){
             if (loginViewModel?.hasUser == true){
+                if(userModel.allUsers.value.any { u ->
+                        u._email == loginViewModel?.currentUser?.email!!
+                    }) {
+                    userModel.currentUser = userModel.allUsers.value.first { u ->
+                        u._email == loginViewModel?.currentUser?.email!!
+                    }
+                }
+                //this is only for backwards compatibility
+                else {
+                    val currentUser = User(loginViewModel?.currentUser?.email!!, loginViewModel?.currentUser?.email!!.substringBefore('@'), "password", false, listOf(""), listOf(""), listOf(""), listOf(""), 100)
+
+                    userModel.saveUser(currentUser)
+                    userModel.currentUser = currentUser
+                }
                 onNavToHomePage.invoke()
             }
         }
     }
 }
-
-
-
-
-
-
-//
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -224,14 +233,6 @@ fun SignUpScreen(
             }
         }
     }
-}
-@Preview(showSystemUi = true)
-@Composable
-fun PrevLoginScreen() {
-    LoginScreen(
-        onNavToHomePage = {},
-        onNavToSignUpPage = {}
-    )
 }
 
 @Preview(showSystemUi = true)

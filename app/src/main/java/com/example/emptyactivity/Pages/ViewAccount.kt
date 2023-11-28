@@ -57,13 +57,14 @@ import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
+import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel) {
+fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel, userViewModel: UserViewModel) {
     val navController = LocalNavController.current
     var myPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
         p._username == "username"
@@ -111,7 +112,7 @@ fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "BlackMamba24",
+                text = userViewModel.currentUser._username,
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)
             )
 

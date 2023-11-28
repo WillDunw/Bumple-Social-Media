@@ -55,7 +55,6 @@ import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
 import com.example.emptyactivity.navigation.Routes
-import com.example.emptyactivity.postListProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
 

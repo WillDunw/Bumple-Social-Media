@@ -77,7 +77,6 @@ class PostRepositoryFirestore() : PostRepository{
     {
         var id = doc.id
         var username = doc.get("username")
-        var test = doc.get("postDate")
         var postDate= LocalDateTime.parse(doc.get("postDate").toString())
         var title = doc.get("title")
         var content = doc.get("content")
