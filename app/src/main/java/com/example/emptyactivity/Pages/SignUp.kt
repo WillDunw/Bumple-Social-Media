@@ -1,5 +1,6 @@
-package com.example.emptyactivity.login
+package com.example.emptyactivity.Pages
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.magnifier
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -22,113 +22,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.emptyactivity.navigation.LocalNavController
-import com.example.emptyactivity.navigation.Routes
+import com.example.emptyactivity.DataModels.User
+import com.example.emptyactivity.DataModels.UserViewModel
+import com.example.emptyactivity.login.LoginViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LoginScreen(
-    loginViewModel: LoginViewModel? = null,
-    onNavToHomePage: () -> Unit,
-    onNavToSignUpPage: () -> Unit,
-) {
-    val loginUiState = loginViewModel?.loginUiState
-    val isError = loginUiState?.loginError != null
-    val context = LocalContext.current
-    val navHost = LocalNavController.current
-
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-        Text(text= "Login",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Black
-        )
-
-        if (isError) {
-            Text(text = loginUiState?.loginError?: "sign in error",color = Color.Red)
-        }
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            value = loginUiState?.username?:"",
-            onValueChange = {
-                loginViewModel?.onUsernameChange(it)
-                            },
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Person, contentDescription=  null )
-            },
-            label = {
-                Text(text = "Username")
-            },
-            isError = isError,
-        )
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            value = loginUiState?.password?:"",
-            onValueChange = {loginViewModel?.onPasswordChange(it)},
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Lock, contentDescription=  null )
-            },
-            label = {
-                Text(text = "Password")
-            },
-            visualTransformation = PasswordVisualTransformation(),
-            isError = isError,
-        )
-
-        Button(onClick = {loginViewModel?.loginUser(context)}){
-            Text(text = "Login")
-        }
-        Spacer(modifier =Modifier.size(8.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-            Text(text = "don't have an account?")
-            Spacer(modifier =Modifier.size(8.dp))
-            TextButton(onClick = { navHost.navigate(Routes.SignUp.route) }) {
-                Text(text = "Sign Up")
-            }
-
-        }
-
-        if (loginUiState?.isLoading == true){
-            CircularProgressIndicator()
-        }
-
-        LaunchedEffect(key1 = loginViewModel?.hasUser){
-            if (loginViewModel?.hasUser == true){
-                onNavToHomePage.invoke()
-            }
-        }
-    }
-}
-
-
-
-
-
-
-//
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
+    userModel: UserViewModel,
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage: () -> Unit,
     onNavToLoginPage: () -> Unit,
@@ -137,6 +50,13 @@ fun SignUpScreen(
     val isError = loginUiState?.signUpError != null
     val context = LocalContext.current
 
+    var username by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    var usernameError by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -149,6 +69,8 @@ fun SignUpScreen(
 
         if (isError) {
             Text(text = loginUiState?.signUpError?: "sign in error",color = Color.Red)
+        } else if(usernameError){
+            Text(text = "Username already in use.", color = Color.Red)
         }
 
         OutlinedTextField(
@@ -161,9 +83,26 @@ fun SignUpScreen(
                 Icon(imageVector = Icons.Default.Person, contentDescription=  null )
             },
             label = {
-                Text(text = "Username")
+                Text(text = "email")
             },
             isError = isError,
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            value = username,
+            onValueChange = {
+                username = it
+                usernameError = userModel.allUsers.value.any { u -> u._username == username } },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Person, contentDescription=  null )
+            },
+            label = {
+                Text(text = "username")
+            },
+            isError = usernameError,
         )
 
         OutlinedTextField(
@@ -198,16 +137,24 @@ fun SignUpScreen(
             isError = isError,
         )
 
+        Button(onClick = {
+            if(!usernameError && !isError){
+                loginViewModel?.createUser(context)
+                var user = User(loginUiState?.usernameSignUp!!, username, "1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(),100)
 
+                userModel.saveUser(user)
+                userModel.currentUser = user
 
-        Button(onClick = {loginViewModel?.createUser(context)}){
+                onNavToHomePage()
+            }
+        }){
             Text(text = "Login")
         }
-        Spacer(modifier =Modifier.size(8.dp))
+        Spacer(modifier = Modifier.size(8.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             Text(text = "Already have an account?")
-            Spacer(modifier =Modifier.size(8.dp))
+            Spacer(modifier = Modifier.size(8.dp))
             TextButton(onClick = { onNavToLoginPage.invoke() }) {
                 Text(text = "Sign in")
             }
@@ -217,25 +164,5 @@ fun SignUpScreen(
         if (loginUiState?.isLoading == true){
             CircularProgressIndicator()
         }
-
-        LaunchedEffect(key1 = loginViewModel?.hasUser){
-            if (loginViewModel?.hasUser == true){
-                onNavToHomePage.invoke()
-            }
-        }
     }
-}
-@Preview(showSystemUi = true)
-@Composable
-fun PrevLoginScreen() {
-    LoginScreen(
-        onNavToHomePage = {},
-        onNavToSignUpPage = {}
-    )
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PrevSignUpScreen() {
-    SignUpScreen(onNavToHomePage = {/* TODO*/}, onNavToLoginPage = {/* TODO*/})
 }

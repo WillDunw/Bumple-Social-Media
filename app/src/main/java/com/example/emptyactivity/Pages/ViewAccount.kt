@@ -57,21 +57,24 @@ import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
+import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel) {
+fun ViewAccount(
+    postViewModel: PostViewModel, commentViewModel: CommentViewModel, userViewModel: UserViewModel
+) {
     val navController = LocalNavController.current
     var myPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
-        p._username == "username"
-    }
+        p._username == userViewModel.currentUser._username
+    }.sortedBy { p -> p._postDate }
 
     var myLikedPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
-        p._likes.contains("username") && p._username != "username"
-    }
+        p._likes.contains(userViewModel.currentUser._username) && p._username != userViewModel.currentUser._username
+    }.sortedBy { p -> p._postDate }
 
     //only have one to track our post view, hopefully name is clear
     var isViewingLikedPosts by rememberSaveable {
@@ -80,166 +83,132 @@ fun ViewAccount(postViewModel: PostViewModel, commentViewModel: CommentViewModel
 
     val commentsFromFirebase = commentViewModel.allComments.collectAsState().value
     var isCommenting by rememberSaveable { mutableStateOf(false) }
-    var postCommenting : Post? = null
+    var postCommenting: Post? = null
 
     MainLayout {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Button(onClick = {
-                FirebaseAuth.getInstance().signOut()
-                navController.navigate(Routes.Login.route)
-
-            }) {
-                Text(text = "sign Out")
-            }
-
-
-            Image(
-                painter = painterResource(id = R.drawable.kobe),
-                contentDescription = "Kobe Bryant's profile picture ",
+        if (isCommenting) {
+            CommentingBox(
+                listComment = commentsFromFirebase,
+                post = postCommenting,
+                commentViewModel = commentViewModel,
+                userViewModel
+            )
+        } else {
+            Column(
                 modifier = Modifier
-                    .size(210.dp)
-                    .clip(CircleShape)
-                    .scale(1.7f)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "BlackMamba24",
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "#DarkHumour. I love funny jokes. #BLM <3 ",
-                style = TextStyle(fontSize = 18.sp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // chatgpt -> how can i have a grid like box section
-                SmallBox(text = "Posts", myPosts.size.toString())
-                SmallBox(text = "Followers", "81k")
-                SmallBox(text = "Following", "224")
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Routes.Login.route)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ){
-                Button(onClick = { isViewingLikedPosts = false },
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GetColorFromViewChoice(!isViewingLikedPosts)),
-                    elevation = ButtonDefaults.buttonElevation(2.dp)) {
-                    Icon(imageVector = Icons.Default.AccountBox, contentDescription = "My Posts")
+                }) {
+                    Text(text = "sign Out")
                 }
 
-                Button(onClick = { isViewingLikedPosts = true },
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GetColorFromViewChoice(isViewingLikedPosts)),
-                    elevation = ButtonDefaults.buttonElevation(2.dp)) {
-                    Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "My Liked Posts")
+                Text(
+                    text = userViewModel.currentUser._username,
+                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // chatgpt -> how can i have a grid like box section
+                    //weird code but trust it was weird behaviour
+                    SmallBox(text = "Posts", myPosts.size.toString())
+                    SmallBox(
+                        text = "Followers",
+                        Math.max(userViewModel.currentUser._followers.size - 1, 0).toString()
+                    )
+                    SmallBox(
+                        text = "Following",
+                        Math.max(userViewModel.currentUser._following.size - 1, 0).toString()
+                    )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn() {
-                if (isViewingLikedPosts) {
-                    items(myLikedPosts) {
-                        PostBox(post = it, postViewModel = postViewModel, commentsFromFirebase, setCommentingCallback = {isCommenting = true; postCommenting = it})
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = { isViewingLikedPosts = false },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GetColorFromViewChoice(
+                                !isViewingLikedPosts
+                            )
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(2.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "My Posts"
+                        )
                     }
-                } else {
-                    items(myPosts) {
-                        PostBoxWithDelete(post = it, postViewModel = postViewModel, commentsFromFirebase, setCommentingCallback = {isCommenting = true; postCommenting = it})
+
+                    Button(
+                        onClick = { isViewingLikedPosts = true },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GetColorFromViewChoice(
+                                isViewingLikedPosts
+                            )
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(2.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ThumbUp,
+                            contentDescription = "My Liked Posts"
+                        )
                     }
                 }
-            }
-                /*if(isViewingLikedPosts){
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        if (isCommenting) {
-                            CommentingBox(listComment = commentsFromFirebase, post = postCommenting, commentViewModel = commentViewModel)
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                items(myLikedPosts) { post ->
-                                    PostBox(
-                                        post = post,
-                                        postViewModel,
-                                        listComment = commentsFromFirebase,
-                                        setCommentingCallback = {isCommenting = true; postCommenting = post}
-                                    )
-                                }
-                            }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                LazyColumn() {
+                    if (isViewingLikedPosts) {
+                        items(myLikedPosts) {
+                            PostBox(
+                                post = it,
+                                postViewModel = postViewModel,
+                                commentsFromFirebase,
+                                setCommentingCallback = {
+                                    isCommenting = true; postCommenting = it
+                                },
+                                userViewModel.currentUser._username
+                            )
+                        }
+                    } else {
+                        items(myPosts) {
+                            PostBoxWithDelete(
+                                post = it,
+                                postViewModel = postViewModel,
+                                commentsFromFirebase,
+                                setCommentingCallback = {
+                                    isCommenting = true; postCommenting = it
+                                },
+                                userViewModel.currentUser._username
+                            )
                         }
                     }
-                } else {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        if (isCommenting) {
-                            CommentingBox(listComment = commentsFromFirebase, post = postCommenting, commentViewModel = commentViewModel)
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                items(myPosts) { post ->
-                                    PostBoxWithDelete(
-                                        post = post,
-                                        postViewModel,
-                                        listComment = commentsFromFirebase,
-                                        setCommentingCallback = {isCommenting = true; postCommenting = post}
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }*/
-
-//            // Button at the top right
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(16.dp),
-//                contentAlignment = Alignment.TopEnd
-//            ) {
-//                Button(
-//                    onClick = { FirebaseAuth.getInstance().signOut() },
-//                    modifier = Modifier
-//                        .padding(8.dp)
-//                        .background(MaterialTheme.colorScheme.primary)
-//                        .padding(12.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = Color.Green,
-//                        contentColor = Color.White
-//                    ),
-//                ) {
-//                    Text("Hello")
-//                }
-//            }
+                }
+            }
         }
     }
 }
 
-fun GetColorFromViewChoice(isChosen: Boolean) : Color {
-    if(isChosen)
-        return Color(247, 212, 95)
+fun GetColorFromViewChoice(isChosen: Boolean): Color {
+    if (isChosen) return Color(247, 212, 95)
 
     return Color(247, 237, 95)
 }
@@ -265,13 +234,12 @@ fun Jokes(header: String, text: String) {
             .padding(8.dp),
 
 
-    ) {
+        ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = header,
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                text = header, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = text)
@@ -280,34 +248,47 @@ fun Jokes(header: String, text: String) {
 }
 
 @Composable
-fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: List<Comment>, setCommentingCallback: () -> Unit){
-    var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post)) }
+fun PostBoxWithDelete(
+    post: Post,
+    postViewModel: PostViewModel,
+    listComment: List<Comment>,
+    setCommentingCallback: () -> Unit,
+    username: String
+) {
+    var heartDisplayColor by rememberSaveable { mutableStateOf(determineHeartDisplayColor(post, username)) }
 
     var displayPostDeleteConfirmation by rememberSaveable {
         mutableStateOf(false)
     }
 
-    if(displayPostDeleteConfirmation){
+    if (displayPostDeleteConfirmation) {
         AlertDialog(onDismissRequest = { displayPostDeleteConfirmation = false },
 
             confirmButton = {
-                            TextButton(onClick = {
-                                displayPostDeleteConfirmation = false
-                                    postViewModel.deletePost(post)
-                            }) {
-                                Text(text = "Delete")
-                            }
+                TextButton(onClick = {
+                    displayPostDeleteConfirmation = false
+                    postViewModel.deletePost(post)
+                }) {
+                    Text(text = "Delete")
+                }
             },
 
-            icon = { Icon(imageVector = Icons.Default.Info, contentDescription = "Are you sure you want to delete?")},
-            
-            title = { Text(text = "Delete confirmation")},
-            
-            text = { Text(text = "Are you sure you want to delete post ${post._title}?")},
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Are you sure you want to delete?"
+                )
+            },
 
-            dismissButton = { TextButton(onClick = { displayPostDeleteConfirmation = false }) {
-                Text(text = "Cancel")
-            }}
+            title = { Text(text = "Delete confirmation") },
+
+            text = { Text(text = "Are you sure you want to delete post ${post._title}?") },
+
+            dismissButton = {
+                TextButton(onClick = { displayPostDeleteConfirmation = false }) {
+                    Text(text = "Cancel")
+                }
+            }
 
         )
     }
@@ -328,8 +309,7 @@ fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: Lis
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = post._title,
-                fontWeight = FontWeight.Bold
+                text = post._title, fontWeight = FontWeight.Bold
             )
             Text(text = "By: " + post._username)
             Spacer(modifier = Modifier.height(5.dp))
@@ -345,10 +325,9 @@ fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: Lis
                 .clip(CircleShape)
                 .background(Color.Blue)
                 .clickable {
-                    onLikeButtonClick(post, postViewModel)
-                    heartDisplayColor = determineHeartDisplayColor(post)
-                },
-            contentAlignment = Alignment.Center
+                    onLikeButtonClick(post, postViewModel, username)
+                    heartDisplayColor = determineHeartDisplayColor(post, username)
+                }, contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "$heartDisplayColor  ${post._likes.count()}",
@@ -363,11 +342,8 @@ fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: Lis
             .clip(CircleShape)
             .background(Color.Blue)
             .clickable {
-                if (!displayPostDeleteConfirmation)
-                    displayPostDeleteConfirmation = true
-            }
-        )
-        {
+                if (!displayPostDeleteConfirmation) displayPostDeleteConfirmation = true
+            }) {
             Text(text = "Delete", color = Color.White, modifier = Modifier.padding(8.dp))
         }
 
@@ -380,13 +356,14 @@ fun PostBoxWithDelete(post: Post, postViewModel: PostViewModel, listComment: Lis
                 .clickable { setCommentingCallback() },
             contentAlignment = Alignment.Center
 
-        ){
+        ) {
             Text(
-                text = "\uD83D\uDCAC  ${listComment.filter { c -> 
-                    c._postId == post._id
-                }.count()}", // NEED TO ADD COMMENTS
-                color = Color.White,
-                modifier = Modifier.padding(8.dp)
+                text = "\uD83D\uDCAC  ${
+                    listComment.filter { c ->
+                        c._postId == post._id
+                    }.count()
+                }", // NEED TO ADD COMMENTS
+                color = Color.White, modifier = Modifier.padding(8.dp)
             )
         }
     }
