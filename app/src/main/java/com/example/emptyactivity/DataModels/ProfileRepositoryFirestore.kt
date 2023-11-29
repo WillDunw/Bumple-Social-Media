@@ -41,7 +41,7 @@ class ProfileRepositoryFirestore(): ProfileRepository {
                     trySend(user)
                 } else {
                     println("Profile has become null")
-                    trySend(User("1","1","1", false, listOf(""), listOf(""), listOf(""), listOf(""), 100))
+                    trySend(User("1","1","1", false, mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(),100))
                 }
             }
         }
@@ -59,8 +59,14 @@ class ProfileRepositoryFirestore(): ProfileRepository {
         var controversialRating = (doc.get("_maxControversialRating") as Long).toInt()
         var password = doc.get("_password")
         var posts = doc.get("_posts")
+        var controversyTypesUnparsed = doc.get("controversialTypes") as List<String>
 
-        return User(email.toString(), username.toString(), password.toString(), isBanned.toString().toBoolean(), followers as MutableList<String>, following as MutableList<String>, posts as MutableList<String>, likedPosts  as MutableList<String>, controversialRating)
+        var controversialTypesParsed = mutableListOf<Post.ControversialType>()
+        controversyTypesUnparsed.forEach { c ->
+            controversialTypesParsed.add(Post.ControversialType.valueOf(c))
+        }
+
+        return User(email.toString(), username.toString(), password.toString(), isBanned.toString().toBoolean(), followers as MutableList<String>, following as MutableList<String>, posts as MutableList<String>, likedPosts  as MutableList<String>, controversialTypesParsed, controversialRating)
     }
 
     override suspend fun getProfiles(): Flow<List<User>> = callbackFlow{

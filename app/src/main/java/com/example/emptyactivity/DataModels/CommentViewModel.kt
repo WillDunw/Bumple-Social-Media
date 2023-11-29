@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CommentViewModel(private val commentRepository: CommentRepository) : ViewModel() {
@@ -30,6 +31,14 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
     fun likePost(post: Post, comment: Comment){
         viewModelScope.launch {
             commentRepository.commentOnPost(post._id, comment)
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            commentRepository.getAllComments().collect {
+                _allComments.value = it
+            }
         }
     }
 

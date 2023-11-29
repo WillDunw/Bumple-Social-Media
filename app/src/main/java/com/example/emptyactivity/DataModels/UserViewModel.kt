@@ -14,11 +14,12 @@ class UserViewModel(private val userRepository: ProfileRepository) : ViewModel()
 
     val allUsers: StateFlow<List<User>> = _allUsers.asStateFlow()
 
-    var currentUser = User("1","1","1", false, listOf(""), listOf(""), listOf(""), listOf(""), 100)
+    var currentUser = User("1","1","1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(),100)
 
     init {
         viewModelScope.launch {
-            userRepository.getProfiles().collect() { allUsersFireStore ->
+            userRepository.getProfiles().collect { allUsersFireStore ->
+                if(allUsersFireStore.isNotEmpty())
                 _allUsers.value = allUsersFireStore
             }
         }
@@ -27,6 +28,15 @@ class UserViewModel(private val userRepository: ProfileRepository) : ViewModel()
     fun saveUser(user: User){
         viewModelScope.launch {
             userRepository.saveProfile(user)
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            userRepository.getProfiles().collect {
+                if(it.isNotEmpty())
+                    _allUsers.value = it
+            }
         }
     }
 }

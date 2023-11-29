@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.example.emptyactivity.DataModels.Post
 import com.example.emptyactivity.DataModels.PostViewModel
+import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
@@ -61,7 +62,7 @@ import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalStdlibApi::class)
 @Composable
-fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
+fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userModel: UserViewModel){
 
     var title by rememberSaveable { mutableStateOf("")}
 
@@ -208,7 +209,7 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
                                     Post(
                                         "default this gets set in firebase" //gross but no need to change this
                                         ,
-                                        "username", // Need to fix this, when real username has been added
+                                        userModel.currentUser._username, // Need to fix this, when real username has been added
                                         LocalDateTime.now(),
                                         title,
                                         content,

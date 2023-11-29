@@ -30,7 +30,6 @@ import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.DataModels.ProfileRepositoryFirestore
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
-import com.example.emptyactivity.Pages.SignIn
 import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.navigation.Router
 import com.example.emptyactivity.ui.theme.EmptyActivityTheme
@@ -50,8 +49,6 @@ class MainActivity : ComponentActivity() {
                     val loginViewModel = LoginViewModel(AuthRepository())
                     val commentModel = CommentViewModel(CommentRepositoryFirestore())
                     val userModel = UserViewModel(ProfileRepositoryFirestore())
-
-                    var user = User("1","1","1", false, listOf(""), listOf(""), listOf(""), listOf(""), 100)
 
                     Router(postModel, commentModel, loginViewModel, userModel)
                 }

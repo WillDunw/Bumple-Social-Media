@@ -14,12 +14,11 @@ import com.example.emptyactivity.DataModels.PostViewModel
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.Pages.CreatePost
 import com.example.emptyactivity.Pages.Home
-import com.example.emptyactivity.Pages.SignIn
+import com.example.emptyactivity.Pages.LoginScreen
+import com.example.emptyactivity.Pages.SignUpScreen
 import com.example.emptyactivity.Pages.ViewAccount
-import com.example.emptyactivity.login.LoginScreen
+import com.example.emptyactivity.Pages.ViewOtherPersonAccount
 import com.example.emptyactivity.login.LoginViewModel
-import com.example.emptyactivity.login.SignUpScreen
-import kotlin.random.Random
 
 val LocalNavController = compositionLocalOf<NavController> { error("No nav controller found :(")  }
 
@@ -31,11 +30,11 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, lo
     CompositionLocalProvider(LocalNavController provides navController) {
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Home.route){
-                Home(postViewModel, commentViewModel)
+                Home(postViewModel, commentViewModel, userModel)
             }
 
             composable(Routes.CreatePost.route){
-                CreatePost(postViewModel)
+                CreatePost(postViewModel, userModel =  userModel)
             }
 
             composable(Routes.Account.route){
@@ -70,10 +69,20 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, lo
                             inclusive = true
                         }
                     }
-                }, loginViewModel = loginViewModel
+                }, loginViewModel = loginViewModel,
+                    userModel = userModel
                     ){
                     navController.navigate(Routes.Login.route)
                 }
+            }
+
+            composable(Routes.ViewOtherAccount.route + "/{username}"){
+                ViewOtherPersonAccount(
+                    userViewModel = userModel,
+                    userName = it.arguments?.getString("username")!!,
+                    postViewModel = postViewModel,
+                    commentViewModel = commentViewModel
+                )
             }
         }
     }
