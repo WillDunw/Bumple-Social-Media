@@ -1,7 +1,10 @@
 package com.example.emptyactivity.Pages
 
+import android.content.Context
 import android.os.Build
 import android.widget.Button
+import android.widget.Toast
+import androidx.activity.compose.ReportDrawn
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import com.example.emptyactivity.DataModels.Post
@@ -28,11 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.navigation.LocalNavController
@@ -106,10 +112,22 @@ fun PostBox(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = post._title,
-                fontWeight = FontWeight.Bold
-            )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Box(Modifier.weight(1f))
+                Text(
+                    text = post._title,
+                    fontWeight = FontWeight.Bold,
+                )
+                Box(Modifier.weight(1f)) {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable(onClick = { context.Report() }),
+                        text = "\uD83D\uDEA9",
+                        textAlign = TextAlign.End
+                    )
+                }
+            }
             Text(text = "By: " + post._username,
                 modifier = Modifier
                     .clickable {
@@ -120,6 +138,7 @@ fun PostBox(
                 text = post._content
             )
         }
+
 
         Box(
             modifier = Modifier
@@ -228,6 +247,12 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
     }
 
 }
+
+
+fun Context.Report() {
+    Toast.makeText(this, "Thanks for reporting this post\n       We \"will\" look into it", Toast.LENGTH_SHORT).show()
+}
+
 
 
 //NEED USERNAME PLUGGED HERE TOO
