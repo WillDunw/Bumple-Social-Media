@@ -97,6 +97,9 @@ fun PostBox(
 
     val navController = LocalNavController.current
 
+
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -192,6 +195,8 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
         mutableStateOf("")
     }
 
+    val navController = LocalNavController.current
+
     Column() {
         Row() {
             TextField(
@@ -237,7 +242,11 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = it._userId)
+                        Text(text = it._userId,
+                                modifier = Modifier
+                                .clickable {
+                            navController.navigate(Routes.ViewOtherAccount.route + "/${it._userId}")
+                        })
                         Text(text = it._comment)
                     }
 
