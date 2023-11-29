@@ -39,12 +39,16 @@ import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.PostViewModel
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import com.example.emptyactivity.DataModels.User
+import com.example.emptyactivity.DataModels.UserViewModel
+import com.example.emptyactivity.navigation.LocalNavController
+import com.example.emptyactivity.navigation.Routes
 import java.util.Random
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
+fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel, userModel: UserViewModel){
 
     val commentsFromFirebase = commentViewModel.allComments.collectAsState()
     var isCommenting by rememberSaveable { mutableStateOf(false) }
@@ -52,19 +56,14 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
 
     //disgusting I agree, pls propose better solution if you can find
     val postsFiltered = postViewModel.allPosts.collectAsState().value.filter { p ->
-        p._controversialRating >= 0 /*replace with current uer's controversial rating*/ &&
-                //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
-                //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
-                //and the username values at the bottom need to be replaced too
-                p._controversialType == Post.ControversialType.None || Post.ControversialType.values().contains(p._controversialType)
-                && p._username != "username" && !p._likes.contains("username")
+        canDisplayHomeScreen(p, userModel.currentUser)
     }.shuffled()
 
     MainLayout {
 
         Box(modifier = Modifier.fillMaxSize()) {
             if (isCommenting) {
-                CommentingBox(listComment = commentsFromFirebase.value, post = postCommenting, commentViewModel = commentViewModel)
+                CommentingBox(listComment = commentsFromFirebase.value, post = postCommenting, commentViewModel = commentViewModel, userModel)
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -76,7 +75,8 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel){
                             post = post,
                             postViewModel,
                             listComment = commentsFromFirebase.value,
-                            setCommentingCallback = {isCommenting = true; postCommenting = post}
+                            setCommentingCallback = {isCommenting = true; postCommenting = post},
+                            username = userModel.currentUser._username
                         )
                     }
                 }
@@ -90,10 +90,12 @@ fun PostBox(
     post: Post,
     postViewModel: PostViewModel,
     listComment: List<Comment>,
-    setCommentingCallback: () -> Unit
+    setCommentingCallback: () -> Unit,
+    username: String
 ){
-    var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post))}
-    val context = LocalContext.current
+    var heartDisplayColor by rememberSaveable{ mutableStateOf(determineHeartDisplayColor(post, username))}
+
+    val navController = LocalNavController.current
 
     Box(
         modifier = Modifier
@@ -126,7 +128,11 @@ fun PostBox(
                     )
                 }
             }
-            Text(text = "By: " + post._username)
+            Text(text = "By: " + post._username,
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Routes.ViewOtherAccount.route + "/${post._username}")
+                    })
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = post._content
@@ -141,8 +147,8 @@ fun PostBox(
                 .clip(CircleShape)
                 .background(Color.Blue)
                 .clickable {
-                    onLikeButtonClick(post, postViewModel)
-                    heartDisplayColor = determineHeartDisplayColor(post)
+                    onLikeButtonClick(post, postViewModel, username)
+                    heartDisplayColor = determineHeartDisplayColor(post, username)
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -177,7 +183,7 @@ fun PostBox(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: CommentViewModel ){
+fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: CommentViewModel, userModel: UserViewModel ){
     var listDisplay = listComment.filter { c ->
         c._postId == post?._id && post != null
     }
@@ -201,8 +207,12 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
                     ,
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                onClick = { if(comment != ""){commentViewModel.addPost(Comment(_id = "1", _userId = "username", _postId = post?._id!!, _comment = comment))
-                    comment = ""} }) {
+                onClick = {
+                    if(comment != ""){
+                        commentViewModel.addPost(Comment(_id = "1", _userId = userModel.currentUser._username, _postId = post?._id!!, _comment = comment))
+
+                    comment = ""
+                    commentViewModel.refresh() } }) {
                 Text("➣")
             }
         }
@@ -246,21 +256,30 @@ fun Context.Report() {
 
 
 //NEED USERNAME PLUGGED HERE TOO
-fun onLikeButtonClick(post: Post, postViewModel: PostViewModel){
-    if(post._likes.contains("username")){
-        post._likes.remove("username")
+fun onLikeButtonClick(post: Post, postViewModel: PostViewModel, username: String){
+    if(post._likes.contains(username)){
+        post._likes.remove(username)
     } else {
-        post._likes.add("username")
+        post._likes.add(username)
     }
 
     postViewModel.likePost(post)
 }
 
 //NEED USERNAME PLUGGED HERE
-fun determineHeartDisplayColor(post: Post) :  String{
-    if(post._likes.contains("username")){
+fun determineHeartDisplayColor(post: Post, username: String) :  String{
+    if(post._likes.contains(username)){
         return "❤️"
     }
 
     return "\uD83E\uDD0D"
+}
+
+fun canDisplayHomeScreen(post: Post, user:User) : Boolean{
+    return post._controversialRating <= user._maxControversialRating &&
+            //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types
+            //values need to be replaced too for the controversial rating above to be the user's rating and the type to be the user's
+            //and the username values at the bottom need to be replaced too
+            (post._controversialType == Post.ControversialType.None || !user.controversialTypes.contains(post._controversialType))
+            && post._username != user._username && !post._likes.contains(user._username)
 }

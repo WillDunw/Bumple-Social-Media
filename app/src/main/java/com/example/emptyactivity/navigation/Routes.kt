@@ -7,4 +7,6 @@ sealed class Routes(val route: String) {
     object SignUp: Routes("SignUpScreen")
 
     object Login: Routes("LoginRoutes")
+
+    object ViewOtherAccount :Routes("ViewOtherAccount")
 }
