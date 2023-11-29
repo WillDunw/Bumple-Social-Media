@@ -225,7 +225,7 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier){
                             modifier = modifier
                                 .padding(end = 10.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(255,197,78))) {
-                            Text(text = "Post")
+                            Text(text  = "➤")
                         }
                     }
                 }

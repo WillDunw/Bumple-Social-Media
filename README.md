@@ -14,6 +14,14 @@
   7. You can click the sign up/ sign in button at the top right to get started.
   8. Once you're logged in / signed up the following feature will be available to you. 
 
+## Milestone 3
+- We completed a lot of functionality for the application. Users can now comfortably use the without any issues.
+  1. Users can now sign up and sign in to the application.
+  2. Users can now create posts and view them on the feed page.
+  3. Users can now view other users profiles and posts.
+  4. Users can comment and on posts
+  5. The ability to see posts that you have liked and created.
+
 ## Screenshots of application
 ![Create a post](/image.png)
 ![News Feed](/image1.png)
