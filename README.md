@@ -15,9 +15,9 @@
   8. Once you're logged in / signed up the following feature will be available to you. 
 
 ## Screenshots of application
-![Create a post](/image.png)
-![News Feed](/image1.png)
-![User Post](/image2.png)
+![Create a post](/bumpleCreatePost.png)
+![News Feed](/bumpleHomeScreen.png)
+![User Post](/bumpleViewOwnAccount.png)
 
 
 
