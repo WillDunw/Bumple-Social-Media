@@ -138,17 +138,30 @@ fun SignUpScreen(
         )
 
         Button(onClick = {
-            if(!usernameError && !isError){
+            val testValue = "test";
+            val usernameSignUp = loginUiState?.usernameSignUp
+            val passwordSignUp = loginUiState?.passwordSignUp
+            val confirmPasswordSignUp = loginUiState?.confirmPasswordSignUp
+
+            if (!usernameSignUp.isNullOrBlank() && !passwordSignUp.isNullOrBlank() && !confirmPasswordSignUp.isNullOrBlank()) {
                 loginViewModel?.createUser(context)
-                var user = User(loginUiState?.usernameSignUp!!, username, "1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(),100)
+                if (passwordSignUp == confirmPasswordSignUp) {
+                    // chatgpt prompt: can you make an email regex for me
+                    val emailPattern = Regex("^[a-zA-Z0-9_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}\$")
+                    if (emailPattern.matches(usernameSignUp ?: "")) {
 
-                userModel.saveUser(user)
-                userModel.currentUser = user
-
-                onNavToHomePage()
+                        var user = User(loginUiState?.usernameSignUp!!, username,"1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), 100)
+                        userModel.saveUser(user)
+                        userModel.currentUser = user
+                        onNavToHomePage()
+                    }
+                }
+            }
+            else {
+                Toast.makeText(context, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
             }
         }){
-            Text(text = "Login")
+            Text(text = "Sign up")
         }
         Spacer(modifier = Modifier.size(8.dp))
 
