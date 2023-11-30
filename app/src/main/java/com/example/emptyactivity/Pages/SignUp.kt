@@ -168,10 +168,11 @@ fun SignUpScreen(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             Text(text = "Already have an account?")
             Spacer(modifier = Modifier.size(8.dp))
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             TextButton(onClick = { onNavToLoginPage.invoke() }) {
                 Text(text = "Sign in")
             }
-
         }
 
         if (loginUiState?.isLoading == true){
