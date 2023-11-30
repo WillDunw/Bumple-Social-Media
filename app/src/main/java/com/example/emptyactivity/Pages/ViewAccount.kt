@@ -122,14 +122,16 @@ fun ViewAccount(
                 ) {
                     // chatgpt -> how can i have a grid like box section
                     //weird code but trust it was weird behaviour
-                    SmallBox(text = "Posts", myPosts.size.toString())
+                    SmallBox(text = "Posts", myPosts.size.toString(), userViewModel.currentUser._username)
                     SmallBox(
                         text = "Followers",
-                        Math.max(userViewModel.currentUser._followers.size - 1, 0).toString()
+                        Math.max(userViewModel.currentUser._followers.size - 1, 0).toString(),
+                        userViewModel.currentUser._username
                     )
                     SmallBox(
                         text = "Following",
-                        Math.max(userViewModel.currentUser._following.size - 1, 0).toString()
+                        Math.max(userViewModel.currentUser._following.size - 1, 0).toString(),
+                        userViewModel.currentUser._username
                     )
                 }
 
@@ -214,9 +216,12 @@ fun GetColorFromViewChoice(isChosen: Boolean): Color {
 }
 
 @Composable
-fun SmallBox(text: String, value: String) {
+fun SmallBox(text: String, value: String, _username: String) {
+    val navController = LocalNavController.current
+
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { navController.navigate(Routes.ViewFollowing.route + "/${_username}") }
     ) {
         Text(text = text, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
         Text(text = value, fontSize = 18.sp)

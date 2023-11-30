@@ -9,4 +9,5 @@ sealed class Routes(val route: String) {
     object Login: Routes("LoginRoutes")
 
     object ViewOtherAccount :Routes("ViewOtherAccount")
+    object ViewFollowing: Routes("ViewFollowing")
 }

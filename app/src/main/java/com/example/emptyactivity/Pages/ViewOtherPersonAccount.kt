@@ -114,14 +114,17 @@ fun ViewOtherPersonAccount(
                 ) {
                     // chatgpt -> how can i have a grid like box section
                     //weird code but trust it was weird behaviour
-                    SmallBox(text = "Posts", userPosts.size.toString())
+                    SmallBox(text = "Posts", userPosts.size.toString(),
+                        userViewModel.currentUser._username)
                     SmallBox(
                         text = "Followers",
-                        Math.max(followerCount - 1, 0).toString()
+                        Math.max(followerCount - 1, 0).toString(),
+                        userViewModel.currentUser._username
                     )
                     SmallBox(
                         text = "Following",
-                        Math.max(user._following.size - 1, 0).toString()
+                        Math.max(user._following.size - 1, 0).toString(),
+                        userViewModel.currentUser._username
                     )
                 }
 
