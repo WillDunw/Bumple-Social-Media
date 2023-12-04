@@ -48,6 +48,8 @@ fun ViewOtherPersonAccount(
 ) {
 
     val user = userViewModel.allUsers.value.first { u -> u._username == userName }
+    user._followers.remove("")
+    user._following.remove("")
 
     var userPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
         p._username == userName
@@ -114,17 +116,16 @@ fun ViewOtherPersonAccount(
                 ) {
                     // chatgpt -> how can i have a grid like box section
                     //weird code but trust it was weird behaviour
-                    SmallBox(text = "Posts", userPosts.size.toString(),
-                        userViewModel.currentUser._username)
-                    SmallBox(
+                    SmallBox(text = "Posts", userPosts.size.toString())
+                    SmallBoxFollower(
                         text = "Followers",
-                        Math.max(followerCount - 1, 0).toString(),
-                        userViewModel.currentUser._username
+                        followerCount.toString(),
+                        userName
                     )
-                    SmallBox(
+                    SmallBoxFollowing(
                         text = "Following",
-                        Math.max(user._following.size - 1, 0).toString(),
-                        userViewModel.currentUser._username
+                        user._following.size.toString(),
+                        userName
                     )
                 }
 

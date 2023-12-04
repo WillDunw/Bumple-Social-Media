@@ -20,7 +20,7 @@ import com.example.emptyactivity.navigation.Routes
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun ViewFollowing(userModel: UserViewModel, username: String) {
+fun ViewFollower(userModel: UserViewModel, username: String) {
     val users = userModel.allUsers.value.first { u -> u._username == username }
     val navController = LocalNavController.current
 
@@ -32,7 +32,7 @@ fun ViewFollowing(userModel: UserViewModel, username: String) {
         ) {
             Column {
                 LazyColumn {
-                    items(users._following) { following ->
+                    items(users._followers) { following ->
                         if(following == null){
                             Text(text = "No Followers")
                         } else {

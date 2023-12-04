@@ -10,4 +10,5 @@ sealed class Routes(val route: String) {
 
     object ViewOtherAccount :Routes("ViewOtherAccount")
     object ViewFollowing: Routes("ViewFollowing")
+    object ViewFollower: Routes("ViewFollower")
 }

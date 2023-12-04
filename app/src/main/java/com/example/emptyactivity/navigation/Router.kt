@@ -17,6 +17,7 @@ import com.example.emptyactivity.Pages.Home
 import com.example.emptyactivity.Pages.LoginScreen
 import com.example.emptyactivity.Pages.SignUpScreen
 import com.example.emptyactivity.Pages.ViewAccount
+import com.example.emptyactivity.Pages.ViewFollower
 import com.example.emptyactivity.Pages.ViewFollowing
 import com.example.emptyactivity.Pages.ViewOtherPersonAccount
 import com.example.emptyactivity.login.LoginViewModel
@@ -91,6 +92,9 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, lo
                     userModel = userModel,
                     username = it.arguments?.getString("username")!!
                 )
+            }
+            composable(Routes.ViewFollower.route + "/{username}"){
+                ViewFollower(userModel = userModel, username = it.arguments?.getString("username")!!)
             }
         }
     }
