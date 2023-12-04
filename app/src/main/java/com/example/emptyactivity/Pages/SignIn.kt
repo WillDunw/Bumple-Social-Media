@@ -1,5 +1,6 @@
 package com.example.emptyactivity.Pages
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
+import com.example.emptyactivity.R
 import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
@@ -48,10 +51,25 @@ fun LoginScreen(
     val context = LocalContext.current
     val navHost = LocalNavController.current
 
+
+    Column {
+        Image(
+            painter = painterResource(id = R.drawable.bumble),
+            contentDescription = "Bumble logo",
+            modifier = Modifier.size(600.dp)
+
+        )
+    }
+    
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Text(text= "",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(16.dp)
+        )
+
         Text(text= "Login",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Black
