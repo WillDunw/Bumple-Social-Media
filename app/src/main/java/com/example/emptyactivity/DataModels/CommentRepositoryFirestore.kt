@@ -15,8 +15,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.time.LocalDateTime
 
+//the name of the collection to hold the comments
 const val collectionNameComments = "Comments"
 
+/**
+ * The class used to interact with the comment repository on firestore specifically.
+ *
+ * @property db The reference to the current firestore instance.
+ * */
 class CommentRepositoryFirestore() : CommentRepository{
     val db = Firebase.firestore
 

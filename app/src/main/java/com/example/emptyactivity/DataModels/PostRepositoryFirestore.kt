@@ -15,6 +15,11 @@ import java.time.LocalDateTime
 
 const val collectionName = "Posts"
 
+/**
+ * The class used to interact with the post repository on firestore specifically.
+ *
+ * @property db The reference to the current firestore instance.
+ * */
 class PostRepositoryFirestore() : PostRepository{
     val db = Firebase.firestore
 

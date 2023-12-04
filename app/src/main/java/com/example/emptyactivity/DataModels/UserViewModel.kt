@@ -9,6 +9,13 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
+/**
+ * The view model that is responsible for the user.
+ *
+ * @property allUsers Holds all the posts that are in the database.
+ * @property currentUser The currently logged in user.
+ * @param userRepository The interface to interact with the comment repository.
+ * */
 class UserViewModel(private val userRepository: ProfileRepository) : ViewModel() {
     private val _allUsers = MutableStateFlow(listOf<User>())
 
