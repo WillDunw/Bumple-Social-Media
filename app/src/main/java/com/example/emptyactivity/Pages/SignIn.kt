@@ -1,6 +1,7 @@
 package com.example.emptyactivity.Pages
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.R
@@ -37,11 +39,10 @@ import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    userModel : UserViewModel,
+    userModel: UserViewModel,
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage: () -> Unit,
     onNavToSignUpPage: () -> Unit
@@ -51,44 +52,46 @@ fun LoginScreen(
     val context = LocalContext.current
     val navHost = LocalNavController.current
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFfac55c)),
+            horizontalAlignment = Alignment.CenterHorizontally,
 
-    Column {
+    ) {
+        Text(
+            text = "Bumble",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp),
+        )
+
         Image(
             painter = painterResource(id = R.drawable.bumble),
             contentDescription = "Bumble logo",
-            modifier = Modifier.size(600.dp)
-
-        )
-    }
-    
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text= "",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.size(200.dp)
         )
 
-        Text(text= "Login",
+        Text(
+            text = "Login",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Black
         )
 
         if (isError) {
-            Text(text = loginUiState?.loginError?: "sign in error",color = Color.Red)
+            Text(text = loginUiState?.loginError ?: "sign in error", color = Color.Red)
         }
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            value = loginUiState?.username?:"",
+            value = loginUiState?.username ?: "",
             onValueChange = {
                 loginViewModel?.onUsernameChange(it)
             },
             leadingIcon = {
-                Icon(imageVector = Icons.Default.Person, contentDescription=  null )
+                Icon(imageVector = Icons.Default.Person, contentDescription = null)
             },
             label = {
                 Text(text = "email")
@@ -100,10 +103,10 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            value = loginUiState?.password?:"",
-            onValueChange = {loginViewModel?.onPasswordChange(it)},
+            value = loginUiState?.password ?: "",
+            onValueChange = { loginViewModel?.onPasswordChange(it) },
             leadingIcon = {
-                Icon(imageVector = Icons.Default.Lock, contentDescription=  null )
+                Icon(imageVector = Icons.Default.Lock, contentDescription = null)
             },
             label = {
                 Text(text = "password")
@@ -117,20 +120,26 @@ fun LoginScreen(
 
             //if the user that is logging in alr has an account, almost every time it will
             //this is just for backwards compatibility again
-            if(userModel.allUsers.value.any{ u -> u._email == loginUiState?.username }){
-                userModel.currentUser = userModel.allUsers.value.first{ u -> u._email == loginUiState?.username}
+            if (userModel.allUsers.value.any { u -> u._email == loginUiState?.username }) {
+                userModel.currentUser = userModel.allUsers.value.first { u -> u._email == loginUiState?.username }
             } else {
                 val currentUser = User(loginUiState?.username!! , loginUiState?.username?.substringBefore('@')!!, "password", false, mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(),100)
 
                 userModel.saveUser(currentUser)
                 userModel.currentUser = currentUser
             }
-        }){
-            Text(text = "Login")
+        },
+//            modifier = Modifier
+//                .background(Color(0xFFBA872B))
+        ) {
+            Text(
+                text = "Login",
+
+            )
         }
         Spacer(modifier = Modifier.size(8.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(text = "don't have an account?")
             Spacer(modifier = Modifier.size(8.dp))
         }
@@ -140,7 +149,7 @@ fun LoginScreen(
             }
         }
 
-        if (loginUiState?.isLoading == true){
+        if (loginUiState?.isLoading == true) {
             CircularProgressIndicator()
         }
 

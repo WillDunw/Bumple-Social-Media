@@ -148,7 +148,7 @@ fun PostBox(
                 .align(Alignment.BottomEnd)
                 .padding(8.dp)
                 .clip(CircleShape)
-                .background(Color.Blue)
+                .background(Color(0xFFBA872B))
                 .clickable {
                     onLikeButtonClick(post, postViewModel, username)
                     heartDisplayColor = determineHeartDisplayColor(post, username)
@@ -166,7 +166,7 @@ fun PostBox(
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
                 .clip(CircleShape)
-                .background(Color.Blue)
+                .background(Color(0xFFBA872B))
                 .clickable {
                     setCommentingCallback()
                 },

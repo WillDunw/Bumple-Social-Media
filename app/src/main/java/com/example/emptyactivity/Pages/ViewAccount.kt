@@ -101,13 +101,18 @@ fun ViewAccount(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Button(onClick = {
-                    FirebaseAuth.getInstance().signOut()
-                    navController.navigate(Routes.Login.route)
+                Button(
+                    onClick = {
+                        FirebaseAuth.getInstance().signOut()
+                        navController.navigate(Routes.Login.route)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+                ) {
+                    Text(text = "Sign Out", color = Color.Black )
 
-                }) {
-                    Text(text = "sign Out")
+
                 }
+
 
                 Text(
                     text = userViewModel.currentUser._username,

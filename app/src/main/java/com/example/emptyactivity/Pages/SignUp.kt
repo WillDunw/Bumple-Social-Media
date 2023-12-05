@@ -1,6 +1,7 @@
 package com.example.emptyactivity.Pages
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.login.LoginViewModel
@@ -59,9 +61,18 @@ fun SignUpScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFfac55c)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Text(
+            text = "Bumble",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp),
+        )
+
         Text(text= "Sign Up",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Black
@@ -161,7 +172,9 @@ fun SignUpScreen(
                 Toast.makeText(context, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
             }
         }){
-            Text(text = "Sign up")
+            Text(
+                text = "Sign up"
+            )
         }
         Spacer(modifier = Modifier.size(8.dp))
 
