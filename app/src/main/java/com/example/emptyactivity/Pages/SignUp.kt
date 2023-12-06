@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -171,9 +172,13 @@ fun SignUpScreen(
             else {
                 Toast.makeText(context, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
             }
-        }){
+        },
+            colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+
+        ){
             Text(
-                text = "Sign up"
+                text = "Sign up",
+                color = Color.Black
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -184,7 +189,8 @@ fun SignUpScreen(
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             TextButton(onClick = { onNavToLoginPage.invoke() }) {
-                Text(text = "Sign in")
+                Text(text = "Sign in",
+                    color = Color.White)
             }
         }
 

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -129,11 +130,11 @@ fun LoginScreen(
                 userModel.currentUser = currentUser
             }
         },
-//            modifier = Modifier
-//                .background(Color(0xFFBA872B))
+            colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
         ) {
             Text(
                 text = "Login",
+                color = Color.Black
 
             )
         }
@@ -145,7 +146,8 @@ fun LoginScreen(
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             TextButton(onClick = { navHost.navigate(Routes.SignUp.route) }) {
-                Text(text = "Sign Up")
+                Text(text = "Sign Up",
+                    color = Color.White)
             }
         }
 
