@@ -94,7 +94,8 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userM
             Text(text = "Make someone laugh!",
                 fontWeight = FontWeight.Bold,
                 fontSize = 7.em,
-                modifier = modifier.padding(bottom = 30.dp))
+                modifier = modifier.padding(bottom = 30.dp),
+                color = Color.White)
 
             Card{
                 Column(modifier = modifier
@@ -170,6 +171,7 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userM
                         Text(text = "Type: ",
                             modifier = modifier
                                 .padding(top = 5.dp))
+
                             
                         Box(modifier = modifier
                             .fillMaxSize()
@@ -180,11 +182,11 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userM
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable(onClick = { dropDownExpanded = true })
-                                    .background(
-                                        Color(255, 197, 78)
-                                    )
+                                    .background(Color(0xFFBA872B))
+
                                     .padding(top = 5.dp),
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                color = Color.White
                             )
                             DropdownMenu(
                                 expanded = dropDownExpanded,
@@ -224,7 +226,7 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userM
                         },
                             modifier = modifier
                                 .padding(end = 10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(255,197,78))) {
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(186,135,43))) {
                             Text(text  = "➤")
                         }
                     }

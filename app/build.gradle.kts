@@ -77,4 +77,6 @@ dependencies {
 
     implementation("com.google.firebase:firebase-firestore")
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+
 }

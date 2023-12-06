@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -105,8 +106,11 @@ fun ViewOtherPersonAccount(
                     userViewModel.saveUser(user)
                     userViewModel.saveUser(userViewModel.currentUser)
                     userViewModel.refresh()
-                }) {
-                    Text(text = if(isFollowing) "Unfollow" else "Follow")
+                },
+                    colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+
+                ) {
+                    Text(text = if(isFollowing) "Unfollow" else "Follow", color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

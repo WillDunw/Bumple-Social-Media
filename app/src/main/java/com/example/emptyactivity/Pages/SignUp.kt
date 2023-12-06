@@ -1,6 +1,7 @@
 package com.example.emptyactivity.Pages
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.login.LoginViewModel
@@ -59,9 +62,18 @@ fun SignUpScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFfac55c)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Text(
+            text = "Bumble",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp),
+        )
+
         Text(text= "Sign Up",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Black
@@ -138,27 +150,48 @@ fun SignUpScreen(
         )
 
         Button(onClick = {
-            if(!usernameError && !isError){
+            val testValue = "test";
+            val usernameSignUp = loginUiState?.usernameSignUp
+            val passwordSignUp = loginUiState?.passwordSignUp
+            val confirmPasswordSignUp = loginUiState?.confirmPasswordSignUp
+
+            if (!usernameSignUp.isNullOrBlank() && !passwordSignUp.isNullOrBlank() && !confirmPasswordSignUp.isNullOrBlank()) {
                 loginViewModel?.createUser(context)
-                var user = User(loginUiState?.usernameSignUp!!, username, "1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(),100)
+                if (passwordSignUp == confirmPasswordSignUp) {
+                    // chatgpt prompt: can you make an email regex for me
+                    val emailPattern = Regex("^[a-zA-Z0-9_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}\$")
+                    if (emailPattern.matches(usernameSignUp ?: "")) {
 
-                userModel.saveUser(user)
-                userModel.currentUser = user
-
-                onNavToHomePage()
+                        var user = User(loginUiState?.usernameSignUp!!, username,"1", false, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), 100)
+                        userModel.saveUser(user)
+                        userModel.currentUser = user
+                        onNavToHomePage()
+                    }
+                }
             }
-        }){
-            Text(text = "Login")
+            else {
+                Toast.makeText(context, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
+            }
+        },
+            colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+
+        ){
+            Text(
+                text = "Sign up",
+                color = Color.Black
+            )
         }
         Spacer(modifier = Modifier.size(8.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             Text(text = "Already have an account?")
             Spacer(modifier = Modifier.size(8.dp))
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             TextButton(onClick = { onNavToLoginPage.invoke() }) {
-                Text(text = "Sign in")
+                Text(text = "Sign in",
+                    color = Color.White)
             }
-
         }
 
         if (loginUiState?.isLoading == true){

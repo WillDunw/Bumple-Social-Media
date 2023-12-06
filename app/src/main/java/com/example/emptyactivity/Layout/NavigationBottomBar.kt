@@ -19,8 +19,8 @@ fun NavigationBottomBar(){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(backgroundColor = Color(255,197,78),
-        contentColor = Color(255,197,78),
+    BottomNavigation(backgroundColor = Color(213,228,174),
+        contentColor = Color(0,0,0),
         elevation = 0.dp) {
         NavBarIcon.items.forEachIndexed{ index, item ->
             NavigationBarItem(selected =

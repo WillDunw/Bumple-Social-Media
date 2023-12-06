@@ -12,7 +12,7 @@ import com.example.emptyactivity.navigation.Routes
 fun BottomBar(){
     val navController = LocalNavController.current
 
-    BottomAppBar(containerColor = Color(255,197,78)) {
+    BottomAppBar(containerColor = Color(213,228,174)) {
         if(navController.currentBackStackEntry?.destination?.route == Routes.SignUp.route){
             Footer()
         } else {
