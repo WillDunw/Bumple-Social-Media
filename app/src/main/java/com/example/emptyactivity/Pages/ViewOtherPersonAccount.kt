@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,8 @@ fun ViewOtherPersonAccount(
 ) {
 
     val user = userViewModel.allUsers.value.first { u -> u._username == userName }
+    user._followers.remove("")
+    user._following.remove("")
 
     var userPosts = postViewModel.allPosts.collectAsState().value.filter { p ->
         p._username == userName
@@ -103,8 +106,11 @@ fun ViewOtherPersonAccount(
                     userViewModel.saveUser(user)
                     userViewModel.saveUser(userViewModel.currentUser)
                     userViewModel.refresh()
-                }) {
-                    Text(text = if(isFollowing) "Unfollow" else "Follow")
+                },
+                    colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+
+                ) {
+                    Text(text = if(isFollowing) "Unfollow" else "Follow", color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -115,13 +121,15 @@ fun ViewOtherPersonAccount(
                     // chatgpt -> how can i have a grid like box section
                     //weird code but trust it was weird behaviour
                     SmallBox(text = "Posts", userPosts.size.toString())
-                    SmallBox(
+                    SmallBoxFollower(
                         text = "Followers",
-                        Math.max(followerCount - 1, 0).toString()
+                        followerCount.toString(),
+                        userName
                     )
-                    SmallBox(
+                    SmallBoxFollowing(
                         text = "Following",
-                        Math.max(user._following.size - 1, 0).toString()
+                        user._following.size.toString(),
+                        userName
                     )
                 }
 

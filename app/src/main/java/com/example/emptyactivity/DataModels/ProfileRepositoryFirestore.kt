@@ -9,6 +9,12 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
+/**
+ * The class used to interact with the user profile repository on firestore specifically.
+ *
+ * @property db The reference to the current firestore instance.
+ * @property dbProfile A reference to the specific collection used.
+ * */
 class ProfileRepositoryFirestore(): ProfileRepository {
     val db = Firebase.firestore
     val dbProfile: CollectionReference = db.collection("Profile")

@@ -8,6 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+/**
+ * The view model that is responsible for the comments.
+ *
+ * @property allComments Holds all the comments that are in the database.
+ * @param commentRepository The interface to interact with the comment repository.
+ * */
 class CommentViewModel(private val commentRepository: CommentRepository) : ViewModel() {
 
     private val _allComments = MutableStateFlow(listOf<Comment>())

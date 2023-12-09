@@ -21,7 +21,9 @@ fun MainLayout(
     Scaffold(
         bottomBar = { BottomBar() },
         content = {
-            Column(modifier = Modifier.padding(it).background(Color(0xEE, 0xEE, 0x00))) { // Set background color here
+            Column(modifier = Modifier.padding(it)
+                                        .background(Color(0xFFE2A62C))
+            ) {
                 content()
             }
         }

@@ -53,6 +53,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
@@ -85,6 +86,9 @@ fun ViewAccount(
     var isCommenting by rememberSaveable { mutableStateOf(false) }
     var postCommenting: Post? = null
 
+    userViewModel.currentUser._followers.remove("")
+    userViewModel.currentUser._following.remove("")
+
     MainLayout {
         if (isCommenting) {
             CommentingBox(
@@ -101,13 +105,18 @@ fun ViewAccount(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Button(onClick = {
-                    FirebaseAuth.getInstance().signOut()
-                    navController.navigate(Routes.Login.route)
+                Button(
+                    onClick = {
+                        FirebaseAuth.getInstance().signOut()
+                        navController.navigate(Routes.Login.route)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+                ) {
+                    Text(text = "Sign Out", color = Color.Black )
 
-                }) {
-                    Text(text = "sign Out")
+
                 }
+
 
                 Text(
                     text = userViewModel.currentUser._username,
@@ -123,13 +132,15 @@ fun ViewAccount(
                     // chatgpt -> how can i have a grid like box section
                     //weird code but trust it was weird behaviour
                     SmallBox(text = "Posts", myPosts.size.toString())
-                    SmallBox(
+                    SmallBoxFollower(
                         text = "Followers",
-                        Math.max(userViewModel.currentUser._followers.size - 1, 0).toString()
+                        Math.max(userViewModel.currentUser._followers.size, 0).toString(),
+                        userViewModel.currentUser._username
                     )
-                    SmallBox(
+                    SmallBoxFollowing(
                         text = "Following",
-                        Math.max(userViewModel.currentUser._following.size - 1, 0).toString()
+                        Math.max(userViewModel.currentUser._following.size - 1, 0).toString(),
+                        userViewModel.currentUser._username
                     )
                 }
 
@@ -217,6 +228,32 @@ fun GetColorFromViewChoice(isChosen: Boolean): Color {
 fun SmallBox(text: String, value: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = text, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
+        Text(text = value, fontSize = 18.sp)
+    }
+}
+
+@Composable
+fun SmallBoxFollowing(text: String, value: String, _username: String) {
+    val navController = LocalNavController.current
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { navController.navigate(Routes.ViewFollowing.route + "/${_username}") }
+    ) {
+        Text(text = text, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
+        Text(text = value, fontSize = 18.sp)
+    }
+}
+
+@Composable
+fun SmallBoxFollower(text: String, value: String, _username: String) {
+    val navController = LocalNavController.current
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { navController.navigate(Routes.ViewFollower.route + "/${_username}") }
     ) {
         Text(text = text, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp))
         Text(text = value, fontSize = 18.sp)

@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+/**
+ * The view model that is responsible for the posts.
+ *
+ * @property allPosts Holds all the posts that are in the database.
+ * @param postRepository The interface to interact with the comment repository.
+ * */
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     private val _allPosts = MutableStateFlow(listOf<Post>())

@@ -1,5 +1,7 @@
 package com.example.emptyactivity.Pages
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,20 +28,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
+import com.example.emptyactivity.R
 import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    userModel : UserViewModel,
+    userModel: UserViewModel,
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage: () -> Unit,
     onNavToSignUpPage: () -> Unit
@@ -49,28 +54,45 @@ fun LoginScreen(
     val navHost = LocalNavController.current
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFfac55c)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+
     ) {
-        Text(text= "Login",
+        Text(
+            text = "Bumble",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp),
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.bumble),
+            contentDescription = "Bumble logo",
+            modifier = Modifier.size(200.dp)
+        )
+
+        Text(
+            text = "Login",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Black
         )
 
         if (isError) {
-            Text(text = loginUiState?.loginError?: "sign in error",color = Color.Red)
+            Text(text = loginUiState?.loginError ?: "sign in error", color = Color.Red)
         }
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            value = loginUiState?.username?:"",
+            value = loginUiState?.username ?: "",
             onValueChange = {
                 loginViewModel?.onUsernameChange(it)
             },
             leadingIcon = {
-                Icon(imageVector = Icons.Default.Person, contentDescription=  null )
+                Icon(imageVector = Icons.Default.Person, contentDescription = null)
             },
             label = {
                 Text(text = "email")
@@ -82,10 +104,10 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            value = loginUiState?.password?:"",
-            onValueChange = {loginViewModel?.onPasswordChange(it)},
+            value = loginUiState?.password ?: "",
+            onValueChange = { loginViewModel?.onPasswordChange(it) },
             leadingIcon = {
-                Icon(imageVector = Icons.Default.Lock, contentDescription=  null )
+                Icon(imageVector = Icons.Default.Lock, contentDescription = null)
             },
             label = {
                 Text(text = "password")
@@ -99,29 +121,37 @@ fun LoginScreen(
 
             //if the user that is logging in alr has an account, almost every time it will
             //this is just for backwards compatibility again
-            if(userModel.allUsers.value.any{ u -> u._email == loginUiState?.username }){
-                userModel.currentUser = userModel.allUsers.value.first{ u -> u._email == loginUiState?.username}
+            if (userModel.allUsers.value.any { u -> u._email == loginUiState?.username }) {
+                userModel.currentUser = userModel.allUsers.value.first { u -> u._email == loginUiState?.username }
             } else {
                 val currentUser = User(loginUiState?.username!! , loginUiState?.username?.substringBefore('@')!!, "password", false, mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(""), mutableListOf(),100)
 
                 userModel.saveUser(currentUser)
                 userModel.currentUser = currentUser
             }
-        }){
-            Text(text = "Login")
+        },
+            colors = ButtonDefaults.buttonColors(containerColor = (Color(0xFFD5E4AE)))
+        ) {
+            Text(
+                text = "Login",
+                color = Color.Black
+
+            )
         }
         Spacer(modifier = Modifier.size(8.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(text = "don't have an account?")
             Spacer(modifier = Modifier.size(8.dp))
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             TextButton(onClick = { navHost.navigate(Routes.SignUp.route) }) {
-                Text(text = "Sign Up")
+                Text(text = "Sign Up",
+                    color = Color.White)
             }
-
         }
 
-        if (loginUiState?.isLoading == true){
+        if (loginUiState?.isLoading == true) {
             CircularProgressIndicator()
         }
 
