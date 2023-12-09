@@ -24,12 +24,24 @@ import com.example.emptyactivity.login.LoginViewModel
 
 val LocalNavController = compositionLocalOf<NavController> { error("No nav controller found :(")  }
 
+/**
+ * Composable function representing the router for the application.
+ *
+ * @param postViewModel viewModel for handling the posts data.
+ * @param commentViewModel ViewModel for handling the comments data.
+ * @param loginViewModel ViewModel for handling login information.
+ * @param userModel ViewModel for handling user info.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, loginViewModel: LoginViewModel, userModel: UserViewModel){
+    // navController is used to navigate between screens.
     val navController = rememberNavController()
 
+    // provided the NavController via CompositionLocal for access within the composables
     CompositionLocalProvider(LocalNavController provides navController) {
+        // NavHost is used to define the navigation routes.
+        // startDestination is the route that will be displayed when the app is launched : which automatically navigates to the login screen.
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Home.route){
                 Home(postViewModel, commentViewModel, userModel)
@@ -44,6 +56,7 @@ fun Router(postViewModel : PostViewModel, commentViewModel: CommentViewModel, lo
             }
 
             composable(route = Routes.Login.route){
+                // after logining in it navigate to the Home screen & clears the backstack
                 LoginScreen(onNavToHomePage = {
                     navController.navigate(Routes.Home.route){
                         launchSingleTop = true
