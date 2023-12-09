@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 /**
- * The main layout of the app
+ *  main layout of the app. everything is wrapped in this composable will be displayed for every page. in other words, every
+ *  page will have the nav bar (bottom bar) and the footer.
  * @param content the content to display
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,10 +20,11 @@ fun MainLayout(
     content: @Composable () -> Unit
 ){
     Scaffold(
+        // bottom bar has the nav bar & footer inside of it.
         bottomBar = { BottomBar() },
         content = {
             Column(modifier = Modifier.padding(it)
-                                        .background(Color(0xFFE2A62C))
+                                        .background(Color(0xFFE2A62C)) // setting a custom colour
             ) {
                 content()
             }
