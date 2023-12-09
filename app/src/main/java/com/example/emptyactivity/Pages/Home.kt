@@ -174,7 +174,7 @@ fun PostBox(
 
         ){
             Text(
-                text = "\uD83D\uDCAC  ${listComment.filter { c -> 
+                text = "\uD83D\uDCAC  ${listComment.filter { c ->
                     c._postId == post._id
                 }.count() }", // NEED TO ADD COMMENTS
                 color = Color.White,
@@ -209,15 +209,15 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    ,
+                ,
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor =  Color(186,135,43)),
                 onClick = {
                     if(comment != ""){
                         commentViewModel.addPost(Comment(_id = "1", _userId = userModel.currentUser._username, _postId = post?._id!!, _comment = comment))
 
-                    comment = ""
-                    commentViewModel.refresh() } }) {
+                        comment = ""
+                        commentViewModel.refresh() } }) {
                 Text("➣")
             }
         }
@@ -243,10 +243,10 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = it._userId,
-                                modifier = Modifier
+                            modifier = Modifier
                                 .clickable {
-                            navController.navigate(Routes.ViewOtherAccount.route + "/${it._userId}")
-                        })
+                                    navController.navigate(Routes.ViewOtherAccount.route + "/${it._userId}")
+                                })
                         Text(text = it._comment)
                     }
 
