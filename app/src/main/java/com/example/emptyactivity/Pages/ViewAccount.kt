@@ -53,7 +53,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.emptyactivity.DataModels.Comment
 import com.example.emptyactivity.DataModels.CommentViewModel
 import com.example.emptyactivity.DataModels.Post
@@ -85,9 +84,6 @@ fun ViewAccount(
     val commentsFromFirebase = commentViewModel.allComments.collectAsState().value
     var isCommenting by rememberSaveable { mutableStateOf(false) }
     var postCommenting: Post? = null
-
-    userViewModel.currentUser._followers.remove("")
-    userViewModel.currentUser._following.remove("")
 
     MainLayout {
         if (isCommenting) {
@@ -124,7 +120,6 @@ fun ViewAccount(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -143,6 +138,8 @@ fun ViewAccount(
                         userViewModel.currentUser._username
                     )
                 }
+
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -261,30 +258,6 @@ fun SmallBoxFollower(text: String, value: String, _username: String) {
 }
 
 @Composable
-fun Jokes(header: String, text: String) {
-    val backgroundColor = Color(0xFFfff194) // // 0xff stays replace the rest with the color code
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            //.background(backgroundColor)
-            .padding(8.dp),
-
-
-        ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = header, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = text)
-        }
-    }
-}
-
-@Composable
 fun PostBoxWithDelete(
     post: Post,
     postViewModel: PostViewModel,
@@ -360,7 +333,8 @@ fun PostBoxWithDelete(
                 .align(Alignment.BottomEnd)
                 .padding(8.dp)
                 .clip(CircleShape)
-                .background(Color.Blue)
+                .background(Color(186,135,43))
+
                 .clickable {
                     onLikeButtonClick(post, postViewModel, username)
                     heartDisplayColor = determineHeartDisplayColor(post, username)
@@ -377,7 +351,7 @@ fun PostBoxWithDelete(
             .align(Alignment.BottomCenter)
             .padding(8.dp)
             .clip(CircleShape)
-            .background(Color.Blue)
+            .background(Color(186,135,43))
             .clickable {
                 if (!displayPostDeleteConfirmation) displayPostDeleteConfirmation = true
             }) {
@@ -389,7 +363,7 @@ fun PostBoxWithDelete(
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
                 .clip(CircleShape)
-                .background(Color.Blue)
+                .background(Color(186,135,43))
                 .clickable { setCommentingCallback() },
             contentAlignment = Alignment.Center
 

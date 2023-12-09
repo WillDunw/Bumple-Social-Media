@@ -211,7 +211,7 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
                     .height(56.dp)
                     ,
                 shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                colors = ButtonDefaults.buttonColors(containerColor =  Color(186,135,43)),
                 onClick = {
                     if(comment != ""){
                         commentViewModel.addPost(Comment(_id = "1", _userId = userModel.currentUser._username, _postId = post?._id!!, _comment = comment))
