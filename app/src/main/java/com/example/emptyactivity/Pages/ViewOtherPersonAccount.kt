@@ -40,6 +40,14 @@ import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * composable function that represents the view other person account screen.
+ *
+ * @param userViewModel the view model that is responsible for the user.
+ * @param userName the username of the user.
+ * @param postViewModel the view model that is responsible for the post.
+ * @param commentViewModel the view model that is responsible for the comment.
+ */
 @Composable
 fun ViewOtherPersonAccount(
     userViewModel: UserViewModel,
