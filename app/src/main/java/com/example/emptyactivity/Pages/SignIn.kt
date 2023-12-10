@@ -40,6 +40,15 @@ import com.example.emptyactivity.login.LoginViewModel
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 
+/**
+ * composable function that represents the login screen.
+ * Handles validation of user input and navigation to the home page.
+ *
+ * @param userModel the view model that is responsible for the user.
+ * @param loginViewModel the view model that is responsible for the login.
+ * @param onNavToHomePage the navigation to the home page.
+ * @param onNavToSignUpPage the navigation to the sign up page.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(

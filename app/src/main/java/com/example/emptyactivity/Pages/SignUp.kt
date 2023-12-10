@@ -40,7 +40,15 @@ import com.example.emptyactivity.DataModels.User
 import com.example.emptyactivity.DataModels.UserViewModel
 import com.example.emptyactivity.login.LoginViewModel
 
-
+/**
+ * composable function that represents the sign up screen.
+ * Creates a user account and stores it in the database.
+ *
+ * @param userModel the view model that is responsible for the user.
+ * @param loginViewModel the view model that is responsible for the login.
+ * @param onNavToHomePage the navigation to the home page.
+ * @param onNavToLoginPage the navigation to the login page.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(

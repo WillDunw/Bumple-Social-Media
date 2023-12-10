@@ -18,6 +18,12 @@ import com.example.emptyactivity.Layout.MainLayout
 import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 
+/**
+ * composable function that represents the view following screen.
+ *
+ * @param userModel the view model that is responsible for the user.
+ * @param username the username of the user.
+ */
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ViewFollowing(userModel: UserViewModel, username: String) {
