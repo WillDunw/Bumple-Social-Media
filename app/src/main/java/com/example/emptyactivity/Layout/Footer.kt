@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+// app footer composable with our copyright stamp
 @Composable
 fun Footer(){
     Row(

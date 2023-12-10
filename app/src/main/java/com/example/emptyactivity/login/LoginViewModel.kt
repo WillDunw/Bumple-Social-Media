@@ -10,19 +10,26 @@ import androidx.lifecycle.viewModelScope
 import com.example.emptyactivity.Auth.AuthRepository
 import kotlinx.coroutines.launch
 
+/**
+ * viewModel class for handling login functionality
+ * @param repository responsible for authentication operations
+ */
 class LoginViewModel(private val repository: AuthRepository = AuthRepository()): ViewModel(){
 
+    // current user information from the authentication repository
     val currentUser = repository.currentUser
 
+    // check if a user is already authenticated
     val hasUser: Boolean
         get() = repository.hasUser()
 
 
+    // state variable for the login UI
     var loginUiState by mutableStateOf(LoginUiState())
         private set
 
 
-    // to change the state of the user interface v
+    // to change the state of the listed variables in the sign up UI
     fun onUsernameChange(username: String){
         loginUiState = loginUiState.copy(username = username)
     }
@@ -45,12 +52,24 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
 
     // to change the state of the user interface ^
 
+
+    /**
+     * function to validate the login form
+     */
     private fun validateLoginForm() =
         loginUiState.username.isBlank() && loginUiState.password.isBlank()
 
+
+    /**
+     * function to validate the sign up form
+     */
     private fun validateSignUpForm() =
         loginUiState.usernameSignUp.isNotBlank() && loginUiState.passwordSignUp.isNotBlank() && loginUiState.confirmPasswordSignUp.isNotBlank()
 
+
+    /**
+     * function to create a new user
+     */
     fun createUser(context: Context) = viewModelScope.launch {
         try {
             if (!validateSignUpForm()) {
@@ -86,6 +105,7 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
         }
     }
 
+    // function to validate the login form
     fun loginUser(context: Context) = viewModelScope.launch {
         try {
             if (validateLoginForm()) {
@@ -123,6 +143,7 @@ class LoginViewModel(private val repository: AuthRepository = AuthRepository()):
         }
     }
 
+    // state class for the login user int.
     data class LoginUiState(
         var username: String = "",
         var password: String = "",

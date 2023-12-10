@@ -28,7 +28,7 @@ fun ViewFollower(userModel: UserViewModel, username: String) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Yellow)
+                .background((Color(186,135,43)))
         ) {
             Column {
                 LazyColumn {
