@@ -63,6 +63,15 @@ import com.example.emptyactivity.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
+
+/**
+ * composable function that represents the view account screen.
+ * Shows the user's posts and liked posts.
+ *
+ * @param postViewModel the view model that is responsible for the posts.
+ * @param commentViewModel the view model that is responsible for the comments.
+ * @param userViewModel the view model that is responsible for the user.
+ */
 @Composable
 fun ViewAccount(
     postViewModel: PostViewModel, commentViewModel: CommentViewModel, userViewModel: UserViewModel
@@ -215,12 +224,21 @@ fun ViewAccount(
     }
 }
 
+/**
+ * Simply returns a color based on the boolean value.
+ */
 fun GetColorFromViewChoice(isChosen: Boolean): Color {
     if (isChosen) return Color(247, 212, 95)
 
     return Color(247, 237, 95)
 }
 
+/**
+ * A box which displays a count of something.
+ *
+ * @param text The text to display.
+ * @param value The value to display.
+ */
 @Composable
 fun SmallBox(text: String, value: String) {
     Column(
@@ -231,6 +249,14 @@ fun SmallBox(text: String, value: String) {
     }
 }
 
+/**
+ * A box which displays a count of something.
+ * How ever it can be used to navigate to a new screen displaying a list of following.
+ *
+ * @param text The text to display.
+ * @param value The value to display.
+ * @_username The username of the user.
+ */
 @Composable
 fun SmallBoxFollowing(text: String, value: String, _username: String) {
     val navController = LocalNavController.current
@@ -244,6 +270,14 @@ fun SmallBoxFollowing(text: String, value: String, _username: String) {
     }
 }
 
+/**
+ * A box which displays a count of something.
+ * How ever it can be used to navigate to a new screen displaying a list of following.
+ *
+ * @param text The text to display.
+ * @param value The value to display.
+ * @_username The username of the user.
+ */
 @Composable
 fun SmallBoxFollower(text: String, value: String, _username: String) {
     val navController = LocalNavController.current
@@ -257,6 +291,15 @@ fun SmallBoxFollower(text: String, value: String, _username: String) {
     }
 }
 
+/**
+ * A box which displays a post and offers the ability to like, comment and delete.
+ *
+ * @param post The post to display.
+ * @param postViewModel The view model that is responsible for the posts.
+ * @param listComment The list of comments.
+ * @param setCommentingCallback The callback to set the commenting state.
+ * @param username The username of the user.
+ */
 @Composable
 fun PostBoxWithDelete(
     post: Post,
