@@ -1,18 +1,91 @@
-# Social Media Application 
+# Bumple - A Social Media App for Sharing Laughter
 
-## Goal
-- Essentially our goal is to create the new age Instagram without all of the adds and useless features that clog up the application such as; going to the main feed screen to view your follow requests, likes, etc. Instagram started boxing in their most useful features deep in their application. We plan on bringing those features out and making them more visible and easier to access. 
+Bumple is a mobile application built with Kotlin and Firebase, designed for users to share, post, and reply to jokes. The app combines humor with essential social media features, fostering a fun and interactive community.
 
-## Quick-start
-- We didn't publish our application on a website as of yet, but that does not mean you cannot download it. Once you click the following link [Social Media App](https://github.com/WillDunw/AppDev3-Project-5A6).
-  1. Once you're on the page click the < > Code button
-  2. You will then be presented with a dropdown menu, click the download zip button.
-  3. Save the file to your preferred destination.
-  4. Once the app is loaded in, click build (the hammer icon) or Control+F9	on windows / Command+F9
-  5. When the wait time is over, you will be greated with the home screen, which is the feed page 
-  6. You will see accounts, which are profiles on the app.
-  7. You can click the sign up/ sign in button at the top right to get started.
-  8. Once you're logged in / signed up the following feature will be available to you. 
+---
+
+## Features
+
+### Core Features:
+
+- **User Accounts**:
+
+  - Sign up with email and password.
+  - Secure authentication using Firebase Authentication.
+  - Profile creation with customizable avatars and bios.
+
+- **Post Jokes**:
+
+  - Share your hilarious jokes with the community.
+  - Support for text-based and image-based jokes.
+
+- **Reply to Jokes**:
+
+  - Engage with posts by commenting or replying with your own witty remarks.
+
+### Social Media Features:
+
+- **Like and Share**:
+
+  - Like your favorite jokes and share them with others in the app.
+
+- **Follow Users**:
+
+  - Follow your favorite jokesters to see their latest content.
+
+- **Feed**:
+
+  - A dynamic feed featuring jokes from people you follow and trending content.
+
+- **Search**:
+
+  - Discover jokes, users, or hashtags with the built-in search functionality.
+
+- **Notifications**:
+
+  - Get notified about new likes, comments, followers, and mentions.
+
+---
+
+## Technology Stack
+
+### Frontend:
+
+- **Language**: Kotlin (Android Native)
+- **Framework**: Jetpack Compose for modern UI development
+
+### Backend:
+
+- **Authentication**: Firebase Authentication
+- **Database**: Firestore (NoSQL, real-time updates)
+- **Storage**: Firebase Storage for uploading images
+- **Cloud Functions**: Custom server-side logic for advanced functionality
+
+---
+
+## Installation and Setup
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/WillDunw/Bumple-Social-Media
+   ```
+
+2. **Open in Android Studio**:
+
+   - Open the project in Android Studio.
+   - Ensure you have the latest Kotlin and Android SDK installed.
+
+3. **Configure Firebase**:
+
+   - Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/).
+   - Download the `google-services.json` file and place it in the `app/` directory.
+
+4. **Run the App**:
+
+   - Build and run the app on an emulator or connected device.
+
+---
 
 ## Team members
 - William Dunwoody : williamdunwoody1@gmail.com
