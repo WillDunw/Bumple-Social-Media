@@ -45,7 +45,14 @@ import com.example.emptyactivity.navigation.LocalNavController
 import com.example.emptyactivity.navigation.Routes
 import java.util.Random
 
-
+/**
+ * The for you page of the app. Providing all jokes that are available.
+ * Except ones that have already been liked by the user.
+ *
+ * @param postViewModel The view model that is responsible for the posts.
+ * @param commentViewModel The view model that is responsible for the comments.
+ * @param userModel The view model that is responsible for the users.
+ **/
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel, userModel: UserViewModel){
@@ -54,7 +61,6 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel, userM
     var isCommenting by rememberSaveable { mutableStateOf(false) }
     var postCommenting : Post? = null
 
-    //disgusting I agree, pls propose better solution if you can find
     val postsFiltered = postViewModel.allPosts.collectAsState().value.filter { p ->
         canDisplayHomeScreen(p, userModel.currentUser)
     }.shuffled()
@@ -85,6 +91,15 @@ fun Home(postViewModel: PostViewModel, commentViewModel: CommentViewModel, userM
     }
 }
 
+/**
+ * The composable that is responsible for displaying a single post.
+ *
+ * @param post The post to be displayed.
+ * @param postViewModel The view model that is responsible for the posts.
+ * @param listComment The list of comments that are available.
+ * @param setCommentingCallback The callback to set the commenting state to true.
+ * @param username The username of the current user.
+ */
 @Composable
 fun PostBox(
     post: Post,
@@ -184,6 +199,15 @@ fun PostBox(
     }
 }
 
+/**
+ * The composable that is responsible for displaying the commenting box.
+ *
+ * @param listComment The list of comments that are available.
+ * @param post The post to be displayed.
+ * @param commentViewModel The view model that is responsible for the comments.
+ * @param userModel The view model that is responsible for the users.
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: CommentViewModel, userModel: UserViewModel ){
@@ -257,14 +281,21 @@ fun CommentingBox(listComment: List<Comment>, post: Post?, commentViewModel: Com
 
 }
 
-
+/**
+ * The composable that is responsible for displaying the reporting toast.
+ */
 fun Context.Report() {
     Toast.makeText(this, "Thanks for reporting this post\n       We \"will\" look into it", Toast.LENGTH_SHORT).show()
 }
 
 
-
-//NEED USERNAME PLUGGED HERE TOO
+/**
+ * The composable that is responsible for liking a post.
+ *
+ * @param post The post to be liked.
+ * @param postViewModel The view model that is responsible for the posts.
+ * @param username The username of the current user.
+ */
 fun onLikeButtonClick(post: Post, postViewModel: PostViewModel, username: String){
     if(post._likes.contains(username)){
         post._likes.remove(username)
@@ -275,7 +306,14 @@ fun onLikeButtonClick(post: Post, postViewModel: PostViewModel, username: String
     postViewModel.likePost(post)
 }
 
-//NEED USERNAME PLUGGED HERE
+/**
+ * The composable that is responsible for determining the heart display color.
+ *
+ * @param post The post to be liked.
+ * @param username The username of the current user.
+ *
+ * @return The heart display color.
+ */
 fun determineHeartDisplayColor(post: Post, username: String) :  String{
     if(post._likes.contains(username)){
         return "❤️"
@@ -284,6 +322,14 @@ fun determineHeartDisplayColor(post: Post, username: String) :  String{
     return "\uD83E\uDD0D"
 }
 
+/**
+ * The composable that is responsible for determining if a post can be displayed on the home screen.
+ *
+ * @param post The post to be liked.
+ * @param user The user that is currently logged in.
+ *
+ * @return true if the post can be displayed on the home screen.
+ */
 fun canDisplayHomeScreen(post: Post, user:User) : Boolean{
     return post._controversialRating <= user._maxControversialRating &&
             //this line explained: true if either there is no controversial type or the controversial type of the post is not in the user's sensitive types

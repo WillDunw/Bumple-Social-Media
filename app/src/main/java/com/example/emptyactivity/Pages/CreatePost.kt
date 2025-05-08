@@ -58,7 +58,13 @@ import com.example.emptyactivity.navigation.NavBarIcon.Companion.items
 import com.example.emptyactivity.navigation.Routes
 import java.time.LocalDate
 import java.time.LocalDateTime
-
+ /**
+ * This is the page where the user can create a post
+ *
+ * @param postViewModel the view model for the post
+ * @param modifier the modifier for the page
+ * @param userModel the view model for the user
+ **/
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalStdlibApi::class)
 @Composable
@@ -209,9 +215,9 @@ fun CreatePost(postViewModel: PostViewModel,modifier: Modifier = Modifier, userM
                             } else {
                                 postViewModel.addPost(
                                     Post(
-                                        "default this gets set in firebase" //gross but no need to change this
+                                        "default this gets set in firebase"
                                         ,
-                                        userModel.currentUser._username, // Need to fix this, when real username has been added
+                                        userModel.currentUser._username,
                                         LocalDateTime.now(),
                                         title,
                                         content,
